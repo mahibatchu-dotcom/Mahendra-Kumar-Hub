@@ -143,9 +143,11 @@ def summarise(text, url):
     key = os.environ["GEMINI_API_KEY"]
     instructions = (ROOT / "prompt.txt").read_text(encoding="utf-8")
     body = {"contents": [{"parts": [{"text": f"{instructions}\n\nSOURCE URL: {url}\n\nPAGE TEXT:\n{text[:60000]}"}]}]}
-    models = [m for m in [os.environ.get("GEMINI_MODEL"), "gemini-3.5-flash", "gemini-3.5-flash-lite"] if m]
+    # Each model has its own free daily allowance, so try several before giving up.
+    models = [m for m in [os.environ.get("GEMINI_MODEL"), "gemini-3.5-flash", "gemini-3.8-flash", "gemini-flash-latest",
+                          "gemini-2.5-flash", "gemini-3.5-flash-lite", "gemini-3.1-flash-lite", "gemini-flash-lite-latest"] if m]
     for model in models:
-        for attempt in range(3):
+        for attempt in range(2):
             r = requests.post(
                 f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent",
                 headers={"x-goog-api-key": key, "Content-Type": "application/json"},
@@ -155,10 +157,10 @@ def summarise(text, url):
                 parts = r.json()["candidates"][0]["content"]["parts"]
                 return "".join(p.get("text", "") for p in parts).strip()
             print(f"{model} attempt {attempt + 1}: HTTP {r.status_code} {r.text[:300]}")
-            if r.status_code in (429, 500, 503):
-                time.sleep(30 * (attempt + 1))
+            if r.status_code in (500, 503):          # temporarily overloaded: wait a little, retry once
+                time.sleep(20)
                 continue
-            break
+            break                                     # 429 (allowance used), 404 (retired), etc.: next model
     fail("Gemini couldn't summarise the article. Try again in a few minutes.")
 
 

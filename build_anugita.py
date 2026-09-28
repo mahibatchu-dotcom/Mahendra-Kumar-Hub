@@ -34,6 +34,7 @@ def clean(fragment):
     text = re.sub(r"<[^>]+>", "", fragment)
     text = html.unescape(text)
     text = re.sub(r"\s+", " ", text).strip()
+    text = re.sub(r"(\S) \d{1,4}(?=[\s,;:.!?'\"’)]|$)", r"\1", text)   # leftover footnote numbers
     return re.sub(r"\s+([,.;:!?])", r"\1", text)
 
 
@@ -48,7 +49,7 @@ def paragraphs(body):
             continue
         if out and not re.search(r"[.!?:;\"'’”)\]]$", out[-1]) and t[0].islower():
             out[-1] += " " + t                                    # paragraph split by a page break
-        elif out and len(out[-1]) < 60 and out[-1].endswith(":"):
+        elif out and len(out[-1]) < 60 and re.search(r"(:|\bsaid|\bspoke)$", out[-1]):
             out[-1] += " " + t                                    # "X said:" joins what follows
         else:
             out.append(t)
@@ -79,7 +80,8 @@ def main():
         url = BASE.format(FIRST_PAGE + i)
         r = requests.get(url, headers={"User-Agent": "Mozilla/5.0 (personal study app)"}, timeout=60)
         r.raise_for_status()
-        ps = passages(paragraphs(chapter_html(r.text)))
+        page = r.content.decode("utf-8", errors="replace")      # the site doesn't declare its encoding
+        ps = passages(paragraphs(chapter_html(page)))
         print(f"Chapter {i + 1}: {len(ps)} passages")
         if not ps:
             raise RuntimeError(f"No text found for chapter {i + 1}")

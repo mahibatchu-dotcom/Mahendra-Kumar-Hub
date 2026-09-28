@@ -1063,7 +1063,7 @@ async function aiStructure(pdf) {
   }
   const prompt = `Below is text from the first pages of a CFA study book, including its table of contents. Return ONLY JSON in this shape: [{"title": "subject or topic name", "chapters": [{"title": "reading or chapter name"}]}]. Use the book's own names and order. Leave out the cover, contents, index, formula sheets and practice exams.\n\n${text.slice(0, 40000)}`;
   const out = await gemini([{ role: "user", parts: [{ text: prompt }] }], true);
-  try { return JSON.parse(out.replace(/```json|```/g, "").trim()); } catch (e) { return null; }
+  try { return parseJSON(out); } catch (e) { return null; }
 }
 async function extractBook(bookId, url) {
   const ref = doc(fs, "users", uid, "books", bookId);
@@ -1670,6 +1670,15 @@ async function loadGitaData(k) {
   const r = await fetch(`data/${k === "bg" ? "bhagavad-gita" : "anugita"}.json`);
   if (!r.ok) throw new Error(k === "anu" ? "The Anu Gita text hasn't been added yet. Run the 'Build Anu Gita data' workflow on GitHub once." : "Couldn't load the Gita text.");
   GITA[k] = await r.json();
+  if (k === "anu") {
+    // repair text that was saved with the wrong character encoding (e.g. "PrithÃ¢" -> "Prithâ")
+    const fix = s => /[ÃÂ]/.test(s) && [...s].every(c => c.charCodeAt(0) < 256) ? new TextDecoder().decode(Uint8Array.from(s, c => c.charCodeAt(0))) : s;
+    const tidy = s => fix(s)
+      .replace(/(\S) \d{1,4}(?=[\s,;:.!?'"’)])/g, "$1")      // leftover footnote numbers
+      .replace(/\b(said|spoke)[.:]?\n\n/g, "$1: ").replace(/twice-born one I took/, "twice-born one! took")                  // "Vâsudeva said" + paragraph break
+      .replace(/[ \t]{2,}/g, " ").trim();
+    GITA.anu.chapters.forEach(c => { c.passages = c.passages.map(tidy); });
+  }
   return GITA[k];
 }
 function startGita(u) {
@@ -1776,7 +1785,7 @@ function gitaCard(it) {
   return card;
 }
 async function explainGita(it, box, fresh) {
-  const ref = doc(fs, "users", uid, "gitaNotes", it.key + "_v3");
+  const ref = doc(fs, "users", uid, "gitaNotes", it.key + (it.k === "anu" ? "_v4" : "_v3"));   // v4: rebuilt Anu Gita text
   if (!fresh && gNotes[it.key]) return drawGita(box, gNotes[it.key], it.k);
   box.innerHTML = `<p class="muted">Preparing the explanation…</p>`;
   if (!fresh) {
@@ -1789,11 +1798,14 @@ async function explainGita(it, box, fresh) {
     : `A passage from the Anu Gita (Mahabharata, Ashvamedhika Parva, adhyaya ${it.adhyaya}), in K. T. Telang's 1882 English translation:\n"${it.text}"\n\n${who}\nReturn ONLY JSON: {"simple":"the passage retold in 3-5 very simple sentences","context":"2-3 sentences: who is speaking to whom and what is going on","explanation":"130-200 words in 2 short paragraphs: first what the passage says in simple words; then the deeper teaching and why it matters","real_life":["4 concrete everyday examples (1-2 sentences each)"],"key_idea":"one short line to remember (under 14 words)"}. Be faithful to the text; don't invent.`;
   try {
     const out = await gemini([{ role: "user", parts: [{ text: prompt }] }], true);
-    const data = JSON.parse(out.replace(/```json|```/g, "").trim());
+    const data = parseJSON(out);
     gNotes[it.key] = data;
     setDoc(ref, data).catch(() => {});
     drawGita(box, data, it.k);
-  } catch (e) { box.innerHTML = `<p class="muted">Couldn't prepare the explanation. Tap "Regenerate explanation" to try again.</p>`; }
+  } catch (e) {
+    box.innerHTML = `<p class="muted">${e.message === "busy" ? "Today's free AI allowance is used up on all models, or they're busy. Try again in a few minutes, or tomorrow." : "Couldn't prepare the explanation."} <button class="ghost rgi">Try again</button></p>`;
+    box.querySelector(".rgi").onclick = () => explainGita(it, box, true);
+  }
 }
 function drawGita(box, d, k) {
   const esc = s => String(s || "").replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
@@ -2010,7 +2022,7 @@ Return ONLY JSON:
 Rules: 5-8 items; 3 examples using only what has been taught; 5 quiz questions mixing reading, meaning and usage; answer is the index of the correct option. Use standard Hindi. Be accurate.`;
   try {
     const out = await gemini([{ role: "user", parts: [{ text: prompt }] }], true);
-    const data = { title, ...JSON.parse(out.replace(/```json|```/g, "").trim()) };
+    const data = { title, ...parseJSON(out) };
     await setDoc(ref, data);
     hLessonData = { n, ...data };
     drawLesson();
@@ -2074,27 +2086,69 @@ $("hChatForm").onsubmit = async e => {
   const learned = HINDI_COURSE.slice(0, Math.max(1, hState.lesson)).map(x => x[0]).join("; ");
   const sys = `You are a warm Hindi conversation tutor. The learner is a beginner who has done these lessons: ${learned}. Known words include: ${hWords.slice(0, 80).map(w => w.hi).join(", ") || "very few"}.
 Reply mostly in simple Hindi at their level. Always write Hindi in Devanagari, then romanisation in brackets, then a short English meaning. If they make a mistake, gently show the correct version first. Keep replies short (2-4 lines) and end with a simple question to keep them talking.`;
-  try { const a = await gemini(hTurns, false, sys); hTurns.push({ role: "model", parts: [{ text: a }] }); hMsg("ai", a); $("hChatStatus").textContent = ""; markHindiDay(); }
+  try { const a = await gemini(hTurns, false, sys, { chat: true }); hTurns.push({ role: "model", parts: [{ text: a }] }); hMsg("ai", a); $("hChatStatus").textContent = ""; markHindiDay(); }
   catch (err) { hTurns.pop(); $("hChatStatus").textContent = "Couldn't get a reply. Try again."; }
   $("hChatSend").disabled = false;
 };
 
 /* ================= Gemini + Ask AI ================= */
-async function gemini(contents, json = false, system = "") {
-  for (const model of ["gemini-3.5-flash", "gemini-3.5-flash-lite"]) {
+function parseJSON(out) {
+  const s = out.replace(/```json|```/g, "").trim();
+  try { return JSON.parse(s); } catch (e) {}
+  const a = Math.min(...["{", "["].map(c => s.indexOf(c)).filter(i => i >= 0));
+  const b = Math.max(s.lastIndexOf("}"), s.lastIndexOf("]"));
+  return JSON.parse(s.slice(a, b + 1));
+}
+/* Gemini with several free models: each model has its own free daily allowance
+   (e.g. only 20/day for gemini-3.5-flash), so we spread requests across them,
+   remember which ones are used up today, and send one request at a time. */
+const MODELS_BULK = ["gemini-3.5-flash-lite", "gemini-3.1-flash-lite", "gemini-flash-lite-latest", "gemini-2.5-flash-lite", "gemini-3.5-flash", "gemini-3.8-flash", "gemini-flash-latest", "gemini-2.5-flash", "gemma-4-31b-it"];
+const MODELS_CHAT = ["gemini-3.8-flash", "gemini-3.5-flash", "gemini-flash-latest", "gemini-2.5-flash", "gemini-3.5-flash-lite", "gemini-3.1-flash-lite", "gemini-flash-lite-latest", "gemma-4-31b-it"];
+const gmKey = () => "hub.gm." + dstr(new Date());
+function gmSkip() { try { return JSON.parse(localStorage.getItem(gmKey()) || "{}"); } catch (e) { return {}; } }
+function gmMark(model, until) { const s = gmSkip(); s[model] = until; try { localStorage.setItem(gmKey(), JSON.stringify(s)); } catch (e) {} }
+let gmQueue = Promise.resolve();
+function gemini(contents, json = false, system = "", opts = {}) {
+  const run = () => geminiNow(contents, json, system, opts);
+  const p = gmQueue.then(run, run);
+  gmQueue = p.catch(() => {});
+  return p;
+}
+async function geminiNow(contents, json, system, opts) {
+  const models = opts.chat ? MODELS_CHAT : MODELS_BULK;
+  const skip = gmSkip(), now = Date.now();
+  let lastErr = "gemini_failed";
+  for (const model of models) {
+    if (skip[model] && skip[model] > now) continue;
+    const gemma = model.startsWith("gemma");
+    const body = { contents: JSON.parse(JSON.stringify(contents)) };
+    if (system && !gemma) body.systemInstruction = { parts: [{ text: system }] };
+    if (system && gemma) body.contents[0].parts[0].text = system + "\n\n" + body.contents[0].parts[0].text;
+    if (json && !gemma) body.generationConfig = { responseMimeType: "application/json" };
     try {
-      const body = { contents };
-      if (system) body.systemInstruction = { parts: [{ text: system }] };
-      if (json) body.generationConfig = { responseMimeType: "application/json" };
       const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
         method: "POST", headers: { "Content-Type": "application/json", "x-goog-api-key": geminiKey }, body: JSON.stringify(body)
       });
-      if (!r.ok) continue;
-      const data = await r.json();
-      return (data.candidates?.[0]?.content?.parts || []).map(p => p.text || "").join("").trim();
+      if (r.ok) {
+        const data = await r.json();
+        const text = (data.candidates?.[0]?.content?.parts || []).filter(p => !p.thought).map(p => p.text || "").join("").trim();
+        if (text) return text;
+        continue;
+      }
+      const err = await r.text();
+      if (r.status === 429) {
+        const perDay = /PerDay|per day/i.test(err);
+        const wait = +(err.match(/retry in ([\d.]+)s/) || [])[1] || 60;
+        gmMark(model, perDay ? now + 24 * 3600e3 : now + wait * 1000);
+        lastErr = "busy";
+      } else if (r.status === 404 || r.status === 400 && /not (found|supported)/i.test(err)) {
+        gmMark(model, now + 24 * 3600e3);
+      } else if (r.status === 400 || r.status === 403) {
+        lastErr = r.status === 403 ? "key" : lastErr;
+      }
     } catch (e) {}
   }
-  throw new Error("gemini_failed");
+  throw new Error(lastErr);
 }
 function hubContext() {
   const today = dstr(new Date());
@@ -2137,7 +2191,7 @@ $("chatForm").onsubmit = async e => {
     "Use the data below to give specific, personalised answers. Be concise and practical. If asked for a quiz, ask one question at a time. " +
     "Don't give medical advice beyond what's in his list; suggest a doctor for health questions.\n\n=== HUB DATA ===\n" + hubContext();
   try {
-    const a = await gemini(chatTurns, false, system);
+    const a = await gemini(chatTurns, false, system, { chat: true });
     chatTurns.push({ role: "model", parts: [{ text: a }] });
     addMsg("ai", a); $("chatStatus").textContent = "";
   } catch (err) {

@@ -1,3 +1,37 @@
+# Who Chooses India’s Election Umpires?
+*2026-09-28* · [Original article](https://www.dot.news/post/6ab901c3368f620002dd4813)
+
+**In one line:**
+The Supreme Court of India is hearing challenges against a 2023 law that critics argue gives the central government unfair control over appointing the country's Election Commissioners.
+
+**Key points:**
+- The Election Commission of India has been a three-member body since 1993, with decisions made by a majority vote.
+- For over 70 years, the President appointed commissioners on the advice of the central government because Parliament had not passed a specific selection law.
+- In 2023, the Supreme Court ruled that a committee of the Prime Minister, the Leader of the Opposition, and the Chief Justice of India should advise on these appointments.
+- Later that year, Parliament passed a law replacing the Chief Justice of India on the selection panel with a Union Cabinet Minister.
+- Petitioners have challenged this new law in the Supreme Court, arguing it gives the ruling government a dominant two-to-one majority on the panel.
+
+**Numbers and names to remember:**
+- 1993: The year the Commission expanded from one member to three.
+- 2015: The year a lawsuit was first filed challenging the government's unilateral power to appoint commissioners.
+- 2023: The year of the landmark Supreme Court ruling and the passing of the new Parliament Act.
+- Gyanesh Kumar: The current Chief Election Commissioner.
+- Sukhbir Singh Sandhu and Vivek Joshi: The current Election Commissioners appointed under the new law.
+- Anoop Baranwal: The citizen who filed the 2015 Public Interest Litigation.
+- Dr. B.R. Ambedkar: The Chairman of the Constitution's Drafting Committee.
+- K.M. Munshi: A member of the Constituent Assembly who believed the government should have a role in selection.
+
+**Why it matters:**
+The neutrality of the Election Commission is vital for holding free and fair democratic elections. Critics worry that allowing the ruling government to dominate the selection committee compromises the independent oversight of elections.
+
+**Key terms:**
+- Election Commission of India (ECI): The official body responsible for conducting elections in India.
+- Chief Election Commissioner (CEC): The head of the three-member Election Commission.
+- Public Interest Litigation (PIL): A legal case filed in a court of law to protect the public interest.
+- Model Code of Conduct (MCC): A set of guidelines that political parties and candidates must follow during elections.
+
+---
+
 # A Reel Big Difference
 *2026-09-27* · [Original article](https://www.dot.news/post/6ab78582e07d740002ccf3ef)
 

@@ -219,6 +219,7 @@
   .wm span { background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 4px 8px; font-size: .88rem; }
   .wm b { font-family: var(--read); font-style: italic; }
   .sloka-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+  .sloka-actions a.pill { text-decoration: none; display: inline-flex; align-items: center; }
 
   /* Hindi */
   .hi { font-family: "Noto Serif Devanagari", var(--read); }
@@ -235,6 +236,12 @@
   .qopt.right { background: #D8F3DC; border-color: #2E7D5B; color: #1B2A41; }
   .qopt.wrong { background: #FDE2E1; border-color: var(--bad); color: #1B2A41; }
   #hChat { max-height: 50vh; overflow-y: auto; margin-bottom: 8px; }
+
+  .rename-btn { font: inherit; font-size: 1rem; background: none; border: 1px dashed var(--line); color: var(--muted); border-radius: 999px; padding: 6px 12px; cursor: pointer; }
+  dialog#renDlg { border: 1px solid var(--line); border-radius: 16px; background: var(--panel); color: var(--ink); padding: 20px; width: min(440px, calc(100vw - 24px)); }
+  dialog#renDlg::backdrop { background: rgba(10, 18, 30, .45); }
+  #renList label { flex-direction: row; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+  #renList input { flex: 1; max-width: 230px; }
 
   /* Calendar */
   dialog#calDlg { border: 1px solid var(--line); border-radius: 16px; background: var(--panel); color: var(--ink); padding: 18px; width: min(460px, calc(100vw - 24px)); max-height: calc(100% - 24px); overflow: auto; }
@@ -292,6 +299,7 @@
     <button data-view="gita" aria-current="false">Gita</button>
     <button data-view="hindi" aria-current="false">Hindi</button>
     <button data-view="ai" aria-current="false">Ask AI</button>
+    <button class="rename-btn" id="renameBtn" title="Rename tabs" aria-label="Rename tabs">✎</button>
   </nav>
   <div class="who" id="who" hidden><span id="whoName"></span><button id="signOut">Sign out</button></div>
 </div>
@@ -566,6 +574,13 @@
   <div class="v-body" id="vBody"><div id="vPages"></div></div>
 </dialog>
 
+<dialog id="renDlg" aria-label="Rename tabs">
+  <div class="cal-head"><h2 style="margin:0">Rename tabs</h2><button class="ghost" id="renClose" style="margin-left:auto">Close</button></div>
+  <p class="muted" style="margin-top:0">Type a new name for any tab. Leave a box empty to use the original name. Tip: you can also double-click (or long-press) a tab to rename it.</p>
+  <div id="renList"></div>
+  <div class="row" style="margin-top:12px"><button class="primary" id="renSave">Save names</button><button class="ghost" id="renReset">Reset all</button></div>
+</dialog>
+
 <dialog id="remDlg" aria-label="Set a reminder">
   <h2 id="remTitle" style="margin:0 0 4px"></h2>
   <p class="muted" id="remWhat" style="margin:0 0 14px"></p>
@@ -635,7 +650,45 @@ function show(view) {
   document.querySelectorAll("#nav button").forEach(b => b.setAttribute("aria-current", b.dataset.view === view));
   try { localStorage.setItem("hub.view", view); } catch (e) {}
 }
-document.querySelectorAll("#nav button").forEach(b => b.onclick = () => show(b.dataset.view));
+document.querySelectorAll("#nav button[data-view]").forEach(b => b.onclick = () => show(b.dataset.view));
+
+/* Rename tabs (names saved to the account, so they match on phone and laptop) */
+const TAB_DEFAULTS = Object.fromEntries([...document.querySelectorAll("#nav button[data-view]")].map(b => [b.dataset.view, b.textContent.trim()]));
+let tabNames = {};
+function applyTabNames() {
+  document.querySelectorAll("#nav button[data-view]").forEach(b => { b.textContent = tabNames[b.dataset.view] || TAB_DEFAULTS[b.dataset.view]; });
+}
+function saveTabNames(names) {
+  tabNames = Object.fromEntries(Object.entries(names).filter(([, v]) => v && v.trim()).map(([k, v]) => [k, v.trim().slice(0, 24)]));
+  applyTabNames();
+  if (auth.currentUser) setDoc(doc(fs, "users", auth.currentUser.uid, "meta", "settings"), { tabNames }, { merge: false }).catch(console.error);
+}
+function renameOne(view) {
+  const cur = tabNames[view] || TAB_DEFAULTS[view];
+  const v = prompt(`Rename the "${cur}" tab to:`, cur);
+  if (v === null) return;
+  saveTabNames({ ...tabNames, [view]: v.trim() === TAB_DEFAULTS[view] ? "" : v });
+}
+document.querySelectorAll("#nav button[data-view]").forEach(b => {
+  b.addEventListener("dblclick", () => renameOne(b.dataset.view));
+  let t = null;
+  b.addEventListener("touchstart", () => { t = setTimeout(() => { t = null; renameOne(b.dataset.view); }, 650); }, { passive: true });
+  ["touchend", "touchmove", "touchcancel"].forEach(ev => b.addEventListener(ev, () => { if (t) clearTimeout(t); t = null; }, { passive: true }));
+});
+$("renameBtn").onclick = () => {
+  $("renList").innerHTML = "";
+  for (const [view, def] of Object.entries(TAB_DEFAULTS)) {
+    const l = document.createElement("label");
+    l.innerHTML = `<span></span><input maxlength="24">`;
+    l.querySelector("span").textContent = def;
+    const inp = l.querySelector("input"); inp.dataset.view = view; inp.placeholder = def; inp.value = tabNames[view] || "";
+    $("renList").appendChild(l);
+  }
+  $("renDlg").showModal();
+};
+$("renSave").onclick = () => { const n = {}; $("renList").querySelectorAll("input").forEach(i => n[i.dataset.view] = i.value); saveTabNames(n); $("renDlg").close(); };
+$("renReset").onclick = () => { $("renList").querySelectorAll("input").forEach(i => i.value = ""); };
+$("renClose").onclick = () => $("renDlg").close();
 document.querySelectorAll(".subtabs button[data-sub]").forEach(b => b.onclick = () => {
   document.querySelectorAll(".subtabs button[data-sub]").forEach(x => x.setAttribute("aria-selected", x === b));
   document.querySelectorAll("[data-subview]").forEach(s => s.hidden = s.dataset.subview !== b.dataset.sub);
@@ -664,6 +717,7 @@ onAuthStateChanged(auth, user => {
   startCfa(user.uid);
   startMeds(user.uid);
   startTodo(user.uid);
+  unsubs.push(onSnapshot(doc(fs, "users", user.uid, "meta", "settings"), s => { tabNames = (s.data() || {}).tabNames || {}; applyTabNames(); }));
   startGita(user.uid);
   startHindi(user.uid);
   startRough(user.uid);
@@ -1691,10 +1745,16 @@ function gitaCard(it) {
   }
   const ai = document.createElement("div"); ai.className = "ai"; card.appendChild(ai);
   const act = document.createElement("div"); act.className = "sloka-actions";
-  act.innerHTML = `<button class="pill sv"></button>${it.k === "bg" ? `<button class="pill ls">🔊 Listen</button>` : ""}<button class="pill ask">Ask AI about this</button><button class="ghost rg">Regenerate explanation</button>`;
+  act.innerHTML = `<button class="pill sv"></button>${it.k === "bg" ? `<a class="pill ls" target="_blank" rel="noopener">🎧 Expert chanting</a><a class="pill yt" target="_blank" rel="noopener">▶ YouTube</a>` : ""}<button class="pill ask">Ask AI about this</button><button class="ghost rg">Regenerate explanation</button>`;
   act.querySelector(".sv").textContent = saved ? "★ Saved" : "☆ Save";
   act.querySelector(".sv").onclick = () => saved ? deleteDoc(doc(fs, "users", uid, "gitaSaved", saved.id)) : addDoc(collection(fs, "users", uid, "gitaSaved"), { key: it.key, createdAt: Date.now() });
-  if (it.k === "bg") act.querySelector(".ls").onclick = () => speak(it.sa.replace(/[॥।]/g, " "), "hi-IN", 0.8);
+  if (it.k === "bg") {
+    const ls = act.querySelector(".ls"), yt = act.querySelector(".yt");
+    ls.href = `https://www.holy-bhagavad-gita.org/chapter/${it.ch}/verse/${it.n}/`;
+    ls.title = "Opens this verse with its recorded Sanskrit recitation";
+    yt.href = "https://www.youtube.com/results?search_query=" + encodeURIComponent(`Bhagavad Gita chapter ${it.ch} verse ${it.n} shloka chanting`);
+    yt.title = "Find chanting videos for this verse on YouTube";
+  }
   act.querySelector(".ask").onclick = () => {
     show("ai");
     $("chatText").value = it.k === "bg" ? `About Bhagavad Gita ${it.ch}.${it.n}: ` : `About this Anu Gita passage (${it.ch}.${it.n}): "${it.text.slice(0, 200)}…" `;
@@ -1706,17 +1766,17 @@ function gitaCard(it) {
   return card;
 }
 async function explainGita(it, box, fresh) {
-  const ref = doc(fs, "users", uid, "gitaNotes", it.key);
+  const ref = doc(fs, "users", uid, "gitaNotes", it.key + "_v2");
   if (!fresh && gNotes[it.key]) return drawGita(box, gNotes[it.key], it.k);
   box.innerHTML = `<p class="muted">Preparing the explanation…</p>`;
   if (!fresh) {
     try { const s = await getDoc(ref); if (s.exists()) { gNotes[it.key] = s.data(); return drawGita(box, s.data(), it.k); } } catch (e) {}
   }
   if (!geminiKey) { box.innerHTML = `<p class="muted">Save your Gemini key in the Ask AI tab to see the meaning and explanation.</p>`; return; }
-  const who = "The reader is Mahendra, an MBA student preparing for CFA Level I, who wants practical wisdom for daily life.";
+  const who = `The reader is Mahendra, a busy MBA student. WRITING STYLE (very important): explain like a kind elder talking to a friend over tea. Use short sentences (under 15 words), everyday words, no jargon, no philosophical terms without a plain meaning in brackets. Anyone aged 12+ should understand it easily.`;
   const prompt = it.k === "bg"
-    ? `Bhagavad Gita chapter ${it.ch}, verse ${it.n}.\nSanskrit:\n${it.sa}\nTransliteration:\n${it.tr}\n\n${who}\nReturn ONLY JSON: {"words":[{"w":"transliterated word","m":"meaning"}],"translation":"your own faithful English translation","explanation":"80-130 words: what is being said, by whom, and why, in the context of the chapter","real_life":["3 concrete, specific examples of applying this today (work, studies, relationships, stress)"],"key_idea":"one short line to remember"}. Keep words to the important ones (max 12). Be faithful to the traditional meaning; don't invent.`
-    : `A passage from the Anu Gita (Mahabharata, Ashvamedhika Parva, adhyaya ${it.adhyaya}), in K. T. Telang's 1882 English translation:\n"${it.text}"\n\n${who}\nReturn ONLY JSON: {"simple":"the passage retold in 2-4 plain modern English sentences","explanation":"80-130 words on the teaching and its context (who is speaking and why)","real_life":["3 concrete, specific examples of applying this today"],"key_idea":"one short line to remember"}. Be faithful to the text; don't invent.`;
+    ? `Bhagavad Gita chapter ${it.ch}, verse ${it.n}.\nSanskrit:\n${it.sa}\nTransliteration:\n${it.tr}\n\n${who}\nReturn ONLY JSON: {"words":[{"w":"transliterated word","m":"meaning"}],"translation":"a simple, faithful meaning in plain English (1-2 short sentences)","explanation":"50-80 words in simple words: who is speaking, what they mean, and why it matters","real_life":["3 short, concrete everyday examples (1 sentence each) from studies, work, family or stress"],"key_idea":"one very short line to remember (under 12 words)"}. Keep words to the important ones (max 12). Be faithful to the traditional meaning; don't invent.`
+    : `A passage from the Anu Gita (Mahabharata, Ashvamedhika Parva, adhyaya ${it.adhyaya}), in K. T. Telang's 1882 English translation:\n"${it.text}"\n\n${who}\nReturn ONLY JSON: {"simple":"the passage retold in 2-4 very simple sentences","explanation":"50-80 words in simple words: who is speaking, what the teaching is, and why it matters","real_life":["3 short, concrete everyday examples (1 sentence each)"],"key_idea":"one very short line to remember (under 12 words)"}. Be faithful to the text; don't invent.`;
   try {
     const out = await gemini([{ role: "user", parts: [{ text: prompt }] }], true);
     const data = JSON.parse(out.replace(/```json|```/g, "").trim());
@@ -1729,9 +1789,9 @@ function drawGita(box, d, k) {
   const esc = s => String(s || "").replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
   let html = "";
   if (k === "bg" && d.words?.length) html += `<h4>Word meanings</h4><div class="wm">${d.words.map(w => `<span><b>${esc(w.w)}</b> · ${esc(w.m)}</span>`).join("")}</div>`;
-  if (d.translation) html += `<h4>Translation</h4><p>${esc(d.translation)}</p>`;
+  if (d.translation) html += `<h4>Meaning</h4><p>${esc(d.translation)}</p>`;
   if (d.simple) html += `<h4>In simple words</h4><p>${esc(d.simple)}</p>`;
-  if (d.explanation) html += `<h4>Explanation</h4><p>${esc(d.explanation)}</p>`;
+  if (d.explanation) html += `<h4>What it means</h4><p>${esc(d.explanation)}</p>`;
   if (d.real_life?.length) html += `<h4>In real life</h4><ul>${d.real_life.map(x => `<li>${esc(x)}</li>`).join("")}</ul>`;
   if (d.key_idea) html += `<h4>Remember</h4><p><strong>${esc(d.key_idea)}</strong></p>`;
   box.innerHTML = html;

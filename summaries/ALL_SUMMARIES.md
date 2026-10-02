@@ -1,3 +1,36 @@
+# Eyes On The Cosmic Prize
+*2026-10-02* · [Original article](https://www.dot.news/post/6abe852863d6930002adf74d)
+
+**In one line:**
+NASA's new Roman Space Telescope, built using repurposed military spy-satellite technology, is traveling to deep space to begin a decades-long mission of capturing highly detailed cosmic images.
+
+**Key points:**
+- The Roman Space Telescope launched about a month ago on a SpaceX Falcon Heavy rocket.
+- It is traveling to the L2 Lagrange point, located 1.5 million kilometres from Earth.
+- The telescope is expected to be ready by early 2027 and has enough fuel to potentially operate for over twenty years.
+- Its core technology was originally developed for a classified spy-satellite programme.
+- Operating in space allows the telescope to bypass Earth's atmosphere, avoiding light distortion and capturing invisible wavelengths like infrared and ultraviolet light.
+
+**Numbers and names to remember:**
+- **Roman Space Telescope**: NASA's new telescope.
+- **L2 Lagrange point**: The telescope's final destination, 1.5 million kilometres from Earth.
+- **Early 2027**: The scheduled start of the telescope's observation mission.
+- **SpaceX Falcon Heavy**: The rocket used to launch the telescope.
+- **Hubble Space Telescope (HST)**: A famous space telescope launched in 1990 that helped determine the age of the universe.
+- **James Webb Space Telescope (JWST)**: A complex $10 billion infrared space telescope launched in 2021.
+
+**Why it matters:**
+By repurposing former spy technology, NASA has deployed a powerful new tool into deep space that will observe cosmic phenomena without the atmospheric interference that limits ground-based telescopes.
+
+**Key terms:**
+- **Aperture**: The opening of a telescope that gathers light.
+- **Three-Mirror Anastigmat (TMA)**: A system that bounces light off three mirrors to produce sharp, wide-angle images.
+- **Visible light**: The specific band of light waves that can be detected by human eyes.
+- **Electromagnetic radiation**: The entire spectrum of light waves, including visible and invisible light.
+- **Infrared light**: A type of light wave invisible to human eyes that is largely blocked by Earth's atmosphere.
+
+---
+
 # “Super” Intelligence Needs Supervision
 *2026-10-01* · [Original article](https://www.dot.news/post/6abd47de60cc7d0002c66a14)
 

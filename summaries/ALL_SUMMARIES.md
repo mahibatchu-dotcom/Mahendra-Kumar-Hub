@@ -1,3 +1,32 @@
+# Between Delight and Dread
+*2026-10-04* · [Original article](https://www.dot.news/post/68725a6a06f9d400021f064d)
+
+**In one line:**
+The article explores the history of tickling as a torture method and explains the two scientific classifications of how our bodies react to touch.
+
+**Key points:**
+- Holocaust survivor Heinz Heger wrote about Nazi SS guards using feather tickling as a distressing torture technique in concentration camps.
+- Scientists categorize tickling into two distinct types: knismesis and gargalesis.
+- Knismesis is a light, itchy feeling that alerts the body to external threats, like a crawling bug.
+- Gargalesis is "real tickling" that triggers helpless laughter when sensitive body parts are poked.
+- You cannot tickle yourself because your brain anticipates your own movements, removing the necessary element of surprise.
+
+**Numbers and names to remember:**
+- World War II: The conflict during which Nazi concentration camp prisoners were subjected to tickle torture.
+- Heinz Heger: A survivor of the Nazi concentration camps who wrote about his experiences.
+- "The Men with the Pink Triangle": The memoir written by Heinz Heger.
+- SS: A branch of the Nazi German military that ran concentration camps.
+
+**Why it matters:**
+The article highlights how a common physical sensation associated with laughter can also function as a tool of distress and torture due to the body's involuntary physical responses.
+
+**Key terms:**
+- Knismesis: A light, itchy sensation that prompts a person to brush something off their skin.
+- Gargalesis: Deep tickling that causes laughter and requires another person to initiate it.
+- SS: A branch of the Nazi German military during World War II.
+
+---
+
 # Closing The Loop: A Threat From Inside
 *2026-10-03* · [Original article](https://www.dot.news/post/6abfff3a1bb99e00025befb3)
 

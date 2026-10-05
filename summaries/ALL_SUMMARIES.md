@@ -1,3 +1,37 @@
+# A Cartful Of Deception
+*2026-10-05* · [Original article](https://www.dot.news/post/6ac23eef27bdf3000271f42d)
+
+**In one line:**
+The Indian government is implementing updated consumer protection rules to combat deceptive "dark patterns" and rising complaints in the rapidly growing e-commerce market.
+
+**Key points:**
+- India's e-retail market has grown to approximately $60 billion, but this rise has been accompanied by a surge in consumer complaints and manipulative online tactics.
+- The National Consumer Helpline received nearly 20 lakh e-commerce grievances between 2021 and 2025, resulting in ₹75 crore in facilitated refunds over the past year.
+- Platforms frequently use "dark patterns"—manipulative design tricks like hidden fees, false urgency, and sneakily adding unwanted items to shopping carts—to influence consumer behavior.
+- Regulators have actively penalized major companies, including Zepto, PharmEasy, McAfee, and others, for using these deceptive practices.
+- The government has amended the Consumer Protection (E-Commerce) Rules to address these issues, with the new rules scheduled to take effect on January 1, 2027.
+
+**Numbers and names to remember:**
+- **$60 billion:** The estimated gross merchandise value (GMV) of the Indian e-retail market.
+- **20 lakh (2 million):** The number of e-commerce grievances received by the National Consumer Helpline between 2021 and 2025.
+- **₹75 crore:** The value of refunds facilitated by the government in the past year.
+- **January 1, 2027:** The date the new Consumer Protection (E-Commerce) Rules will come into effect.
+- **DOCA & CCPA:** Department of Consumer Affairs and Central Consumer Protection Authority, the key regulatory bodies involved.
+- **Zepto, PharmEasy, McAfee, Anuj Jindal:** Companies mentioned as having faced penalties or regulatory action for deceptive practices.
+
+**Why it matters:**
+As online shopping becomes a necessity for millions of Indian consumers, these updated rules aim to legally eliminate manipulative digital designs. This transition ensures a fairer, more transparent marketplace where businesses cannot use psychological tricks to extract money from shoppers.
+
+**Key terms:**
+- **Gross merchandise value (GMV):** The total monetary value of goods sold through a marketplace over a certain period.
+- **Dark pattern:** A user interface design deliberately crafted to trick or manipulate users into making choices against their best interest.
+- **Drip pricing:** Revealing hidden fees and extra charges only at the final step of checkout.
+- **Basket sneaking:** Unfairly adding extra items or paid services to a user’s shopping cart without their explicit consent.
+- **Roach motel:** A subscription design where signing up is incredibly easy, but canceling is deliberately made difficult.
+- **Confirm shaming:** Using guilt-inducing language to make users feel bad for rejecting an optional service or add-on.
+
+---
+
 # Between Delight and Dread
 *2026-10-04* · [Original article](https://www.dot.news/post/68725a6a06f9d400021f064d)
 

@@ -1,3 +1,36 @@
+# A Rising Tide
+*2026-10-08* · [Original article](https://www.dot.news/post/6ac674f739c20000027c9b39)
+
+**In one line:** Human-driven warming is accelerating global sea level rise through ocean expansion and melting land ice, prompting the UN to adopt its first-ever declaration on the crisis.
+
+**Key points:**
+- The UN General Assembly recently adopted the first-ever Declaration on Sea Level Rise after decades of discussion.
+- Global sea levels rose by 6 millimetres in 2024, the largest annual increase ever recorded.
+- Average sea levels are roughly 20 cm higher than in 1900; the first 10 cm rise took 90 years, while the next 10 cm occurred in just 30 years.
+- Warming ocean water causes thermal expansion (responsible for about a third of the rise), while melting land ice from glaciers and ice sheets causes the remaining two-thirds.
+- Greenland and Antarctica lose about 420 billion metric tons of ice combined each year, whereas melting sea ice does not meaningfully raise sea levels.
+- Because past warming is locked in, sea levels are projected to rise another 10 to 15 cm by 2050 regardless of emissions changes.
+
+**Numbers and names to remember:**
+- António Guterres: UN Secretary-General who warned in 2024 that "rising seas are sinking futures."
+- 6 millimetres: Record annual sea level increase recorded in 2024.
+- 20 cm: Approximate total average rise in sea levels since 1900.
+- 420 billion metric tons: Annual ice shed jointly by Greenland and Antarctica.
+- 40%: Share of the world’s population living within 100 kilometres of a coast.
+- 8 of 10: Number of the world's largest cities located near a coast.
+- NASA & IPCC: Organisations projecting 10–15 cm rise by 2050 and around half a metre by 2100, respectively.
+
+**Why it matters:**
+With 40% of the world's population and 8 of the 10 largest cities located near coasts, rising sea levels pose an unavoidable threat to global economies and communities for decades to come.
+
+**Key terms:**
+- Thermal expansion: The swelling of water volume as ocean temperatures rise.
+- Land ice: Glaciers and continent-based ice sheets that add water to the oceans when melted, unlike floating sea ice.
+- Radar altimeter: A satellite sensor that tracks sea levels by bouncing microwave pulses off the ocean surface.
+- Holocene and Anthropocene: The current warm geological epoch (Holocene), often referred to as the Anthropocene to highlight the profound impact of human activities over the last 200 years.
+
+---
+
 # How United Is The United Kingdom?
 *2026-10-06* · [Original article](https://www.dot.news/post/6ac3cffb76d59b00022339bf)
 

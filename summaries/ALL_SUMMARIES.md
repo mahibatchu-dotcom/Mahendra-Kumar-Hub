@@ -1,3 +1,35 @@
+# The Great Insurance Shake-Up
+*2026-10-09* · [Original article](https://www.dot.news/post/6ac7b0f4f4667b000284d14d)
+
+**In one line:** A consultation paper by India's insurance regulator proposing radical changes to how insurance is sold triggered a massive stock crash for major distributors and banks.
+
+**Key points:**
+- Shares of Policybazaar's parent company, PB Fintech, crashed by 36% in one day, wiping out over ₹31,000 crore in market value.
+- The market drop was triggered by a 120-page consultation paper from the Insurance Regulatory and Development Authority of India (IRDAI).
+- The regulator aims to tackle the widespread problem of insurance mis-selling and improve sector transparency.
+- Distributors currently earn high first-year commissions of 20% to 35% on insurance premiums, which drop to 2% to 5% in subsequent years.
+- India's insurance network relies heavily on individual agents, banks (bancassurance), and online aggregators to sell policies.
+
+**Numbers and names to remember:**
+- September 24: The date PB Fintech's shares crashed.
+- PB Fintech (Policybazaar): The insurance aggregator parent company whose market value fell.
+- IRDAI: Insurance Regulatory and Development Authority of India, the sector's regulatory watchdog.
+- LIC: Life Insurance Corporation of India, the country's largest public-sector life insurer.
+- ₹31,000 crore: The amount of market value wiped out from PB Fintech in a single day.
+- 74: The total number of registered insurance companies in India.
+
+**Why it matters:**
+The proposed regulatory changes could fundamentally alter the financial incentives of insurance distributors, potentially reducing mis-selling but also heavily impacting the profits of banks, agents, and web platforms.
+
+**Key terms:**
+- IRDAI: The government body that regulates and develops the insurance industry in India.
+- Term insurance: A pure life insurance policy that pays out only if the insured person passes away during the policy term.
+- Bancassurance: An arrangement where banks sell insurance products to their existing customer base.
+- Reinsurers: Companies that provide financial protection and insurance to other insurance companies.
+- Expenses of Management (EoM): A regulatory limit on how much premium money an insurer can spend on operations, marketing, and commissions.
+
+---
+
 # A Rising Tide
 *2026-10-08* · [Original article](https://www.dot.news/post/6ac674f739c20000027c9b39)
 

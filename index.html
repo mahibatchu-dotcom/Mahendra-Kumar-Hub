@@ -2484,7 +2484,7 @@ function renderCases() {
     const days = c.deadline ? Math.round((new Date(c.deadline + "T00:00:00") - new Date(today + "T00:00:00")) / 864e5) : null;
     d.innerHTML = `<h3></h3><div class="due"></div><div class="meta"><span>🏢 <b class="org"></b></span><span>📅 Registration ends: <b class="end"></b></span><span>👥 Team: <b class="team"></b></span></div>
       <div class="acts"><select aria-label="Status"><option value="new">New</option><option value="interested">Interested</option><option value="registered">Registered ✓</option><option value="skip">Not interested</option></select>
-      <a class="ghost lnk" target="_blank" rel="noopener" hidden>Open link ↗</a><span class="muted src" style="font-size:.78rem"></span><button class="ghost del" style="margin-left:auto">Delete</button></div>`;
+      <a class="ghost lnk" target="_blank" rel="noopener" hidden>Open link ↗</a><button class="ghost find" hidden>🔎 Find missing details</button><span class="muted src" style="font-size:.78rem"></span><button class="ghost del" style="margin-left:auto">Delete</button></div>`;
     d.querySelector("h3").textContent = c.name;
     d.querySelector(".org").textContent = c.organiser || "—";
     d.querySelector(".end").textContent = c.deadline ? new Date(c.deadline + "T00:00:00").toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : (c.deadlineText || "not mentioned");
@@ -2493,7 +2493,21 @@ function renderCases() {
     if (days != null && !isPast) { due.textContent = days === 0 ? "Ends today" : `${days} day${days === 1 ? "" : "s"} left`; if (days <= 3) due.classList.add("soon"); }
     else if (isPast) due.textContent = "Closed";
     if (c.link) { const a = d.querySelector(".lnk"); a.href = c.link; a.hidden = false; }
-    if (c.subject) d.querySelector(".src").textContent = "From email: " + c.subject.slice(0, 70);
+    if (c.subject) d.querySelector(".src").textContent = (c.src === "email + website" ? "From email + website: " : "From email: ") + c.subject.slice(0, 60);
+    // tap a detail to correct it yourself
+    [["org", "organiser", "Organiser"], ["end", "deadline", "Registration end date (YYYY-MM-DD)"], ["team", "team", "Team size (e.g. 2-4)"]].forEach(([cls, field, label]) => {
+      const el = d.querySelector("." + cls); el.style.cursor = "pointer"; el.title = "Tap to edit";
+      el.onclick = () => { const v = prompt(label, c[field] || ""); if (v === null) return; if (field === "deadline" && v && !/^\d{4}-\d{2}-\d{2}$/.test(v.trim())) return alert("Use the format YYYY-MM-DD, e.g. 2026-11-15"); updateDoc(doc(fs, "users", uid, "caseComps", c.id), { [field]: v.trim() }); };
+    });
+    if (ccMissing(c)) {
+      const f = d.querySelector(".find"); f.hidden = false;
+      f.onclick = async () => {
+        if (!geminiKey) return alert("Save your Gemini key in the Ask AI tab first.");
+        f.disabled = true; f.textContent = "🔎 Checking the website…";
+        const ok = await enrichCase(c);
+        f.disabled = false; f.textContent = ok ? "✓ Updated" : "Couldn't find more details";
+      };
+    }
     const sel = d.querySelector("select"); sel.value = c.status || "new";
     sel.onchange = () => updateDoc(doc(fs, "users", uid, "caseComps", c.id), { status: sel.value });
     d.querySelector(".del").onclick = () => confirm(`Delete "${c.name}"?`) && deleteDoc(doc(fs, "users", uid, "caseComps", c.id));
@@ -2510,6 +2524,36 @@ $("ccForm").onsubmit = e => {
   addDoc(ccCol(), { name: $("ccName").value.trim(), organiser: $("ccOrg").value.trim(), deadline: $("ccEnd").value || "", team: $("ccTeam").value.trim(), link: $("ccLink").value.trim(), status: "new", createdAt: Date.now(), manual: true });
   $("ccForm").reset();
 };
+
+/* Fill missing details (deadline, team size, organiser, name) from the competition's web page.
+   1) Gemini opens the links found in the email.  2) If that fails, Gemini searches Google. */
+const ccMissing = c => !c.deadline || !c.team || !c.organiser;
+async function enrichCase(c) {
+  const today = dstr(new Date());
+  const ask = `Find the details of this case competition. Use ONLY what the pages actually say.
+Competition: "${c.name}"${c.organiser ? ` by ${c.organiser}` : ""}.
+Already known: deadline=${c.deadline || c.deadlineText || "unknown"}, team size=${c.team || "unknown"}.
+Today is ${today}. Return ONLY a JSON object: {"name": "official competition name", "organiser": "organising company or college", "registration_deadline": "YYYY-MM-DD or null", "deadline_text": "deadline as written, or null", "team_size": "e.g. '2-4', or null", "link": "best registration page URL, or null", "found": true/false}`;
+  const tryOnce = async (prompt, tools) => {
+    try { const out = await gemini([{ role: "user", parts: [{ text: prompt }] }], false, "", { tools }); return parseJSON(out); } catch (e) { return null; }
+  };
+  let r = null;
+  const links = (c.links && c.links.length ? c.links : [c.link]).filter(Boolean);
+  if (links.length) r = await tryOnce(ask + "\n\nRead these pages:\n" + links.join("\n"), [{ url_context: {} }]);
+  if (!r || !r.found || (!r.registration_deadline && !r.team_size)) {
+    const r2 = await tryOnce(ask + "\n\nSearch the web (e.g. Unstop, the organiser's site) for this competition's registration page.", [{ google_search: {} }]);
+    if (r2 && r2.found) r = { ...(r || {}), ...Object.fromEntries(Object.entries(r2).filter(([, v]) => v)) };
+  }
+  if (!r || !r.found) return false;
+  const upd = {};
+  if (!c.deadline && /^\d{4}-\d{2}-\d{2}$/.test(r.registration_deadline || "")) upd.deadline = r.registration_deadline;
+  if (!c.deadlineText && r.deadline_text) upd.deadlineText = r.deadline_text;
+  if (!c.team && r.team_size) upd.team = String(r.team_size);
+  if (!c.organiser && r.organiser) upd.organiser = r.organiser;
+  if (!c.link && r.link) upd.link = r.link;
+  if (Object.keys(upd).length) { upd.src = "email + website"; await updateDoc(doc(fs, "users", uid, "caseComps", c.id), upd); return true; }
+  return false;
+}
 
 // Gmail is read with a separate, temporary sign-in, so your hub login is never changed.
 const mailApp = initializeApp(firebaseConfig, "mail");
@@ -2552,12 +2596,12 @@ $("ccScan").onclick = async () => {
       const hd = n => (m.payload.headers || []).find(x => x.name.toLowerCase() === n)?.value || "";
       mails.push({ id, subject: hd("subject"), from: hd("from"), date: hd("date"), body: mailBody(m.payload).slice(0, 2500) });
     }
-    let added = 0;
+    let added = 0; const toEnrich = [];
     for (let i = 0; i < mails.length; i += 6) {
       const batch = mails.slice(i, i + 6);
       msg(`Picking out the details (${Math.min(i + 6, mails.length)} of ${mails.length})…`);
       const prompt = `Below are ${batch.length} emails received by an MBA student in India. For EACH email, decide if it announces or invites participation in a case competition or a similar student business competition (case challenge, strategy/marketing/finance case contest, B-school competition). Newsletters, results announcements, webinars and job posts are NOT case competitions.
-For each email return an object: {"i": index, "is_case_comp": true/false, "name": "competition name", "organiser": "company or college organising it", "registration_deadline": "YYYY-MM-DD or null", "deadline_text": "the deadline as written, or null", "team_size": "e.g. '2-4' or '3', or null", "link": "registration link if present, or null"}.
+For each email return an object: {"i": index, "is_case_comp": true/false, "name": "competition name", "organiser": "company or college organising it", "registration_deadline": "YYYY-MM-DD or null", "deadline_text": "the deadline as written, or null", "team_size": "e.g. '2-4' or '3', or null", "link": "the main registration or details link, or null", "links": ["up to 3 URLs in the email that most likely lead to the competition's page, e.g. Unstop, D2C, college or company pages"]}.
 Use ONLY information in the email. If the year is missing, assume the next occurrence after the email date. Return ONLY a JSON array.
 
 ` + batch.map((m, k) => `=== EMAIL ${k} ===\nDate: ${m.date}\nFrom: ${m.from}\nSubject: ${m.subject}\n\n${m.body}`).join("\n\n");
@@ -2569,13 +2613,21 @@ Use ONLY information in the email. If the year is missing, assume the next occur
         if (!r.is_case_comp || !r.name) continue;
         const key = (r.name + "|" + (r.organiser || "")).toLowerCase().replace(/\s+/g, " ");
         const dup = cases.find(c => (c.name + "|" + (c.organiser || "")).toLowerCase().replace(/\s+/g, " ") === key);
-        const data = { name: r.name, organiser: r.organiser || "", deadline: /^\d{4}-\d{2}-\d{2}$/.test(r.registration_deadline || "") ? r.registration_deadline : "", deadlineText: r.deadline_text || "", team: r.team_size || "", link: r.link || "", subject: m.subject, msgId: m.id, receivedAt: m.date };
-        if (dup) { const upd = {}; for (const [k, v] of Object.entries(data)) if (v && !dup[k]) upd[k] = v; if (data.deadline && data.deadline !== dup.deadline) upd.deadline = data.deadline; if (Object.keys(upd).length) await updateDoc(doc(fs, "users", uid, "caseComps", dup.id), upd); }
-        else { await addDoc(ccCol(), { ...data, status: "new", createdAt: Date.now() }); added++; }
+        const links = [...new Set([r.link, ...(r.links || [])].filter(u => /^https?:\/\//.test(u || "")))].slice(0, 3);
+        const data = { name: r.name, organiser: r.organiser || "", deadline: /^\d{4}-\d{2}-\d{2}$/.test(r.registration_deadline || "") ? r.registration_deadline : "", deadlineText: r.deadline_text || "", team: r.team_size || "", link: r.link || links[0] || "", links, subject: m.subject, msgId: m.id, receivedAt: m.date, src: "email" };
+        if (dup) { const upd = {}; for (const [k, v] of Object.entries(data)) if (v && (!dup[k] || (Array.isArray(v) && !dup[k].length))) upd[k] = v; if (data.deadline && data.deadline !== dup.deadline) upd.deadline = data.deadline; if (Object.keys(upd).length) await updateDoc(doc(fs, "users", uid, "caseComps", dup.id), upd); toEnrich.push({ ...dup, ...upd }); }
+        else { const ref = await addDoc(ccCol(), { ...data, status: "new", createdAt: Date.now() }); added++; toEnrich.push({ id: ref.id, ...data }); }
       }
     }
     await setDoc(ccMetaDoc(), { seen: [...seen].slice(-800), last: Date.now(), account }, { merge: true });
-    msg(added ? `Found ${added} new case competition${added === 1 ? "" : "s"}.` : "Scan finished. No new case competitions.");
+    // fill in anything the email didn't say, from the competition's own web page
+    const gaps = toEnrich.filter(ccMissing);
+    let filled = 0;
+    for (const [k, c] of gaps.entries()) {
+      msg(`Checking the competition websites for missing details (${k + 1} of ${gaps.length})…`);
+      if (await enrichCase(c)) filled++;
+    }
+    msg((added ? `Found ${added} new case competition${added === 1 ? "" : "s"}.` : "Scan finished. No new case competitions.") + (gaps.length ? ` Filled missing details for ${filled} of ${gaps.length} from their websites.` : ""));
   } catch (e) {
     msg(e.code === "auth/popup-closed-by-user" ? "Sign-in window was closed." : (e.message || "Couldn't scan your email."));
   } finally {
@@ -2614,7 +2666,9 @@ async function geminiNow(contents, json, system, opts) {
   for (const model of models) {
     if (skip[model] && skip[model] > now) continue;
     const gemma = model.startsWith("gemma");
+    if (opts.tools && gemma) continue;                       // Gemma can't open web pages
     const body = { contents: JSON.parse(JSON.stringify(contents)) };
+    if (opts.tools) { body.tools = opts.tools; json = false; } // JSON mode can't be combined with tools
     if (system && !gemma) body.systemInstruction = { parts: [{ text: system }] };
     if (system && gemma) body.contents[0].parts[0].text = system + "\n\n" + body.contents[0].parts[0].text;
     if (json && !gemma) body.generationConfig = { responseMimeType: "application/json" };

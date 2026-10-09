@@ -253,6 +253,40 @@
   #renList label { flex-direction: row; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
   #renList input { flex: 1; max-width: 230px; }
 
+  /* Weekly reminder banner */
+  .plan-banner { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 8px 18px; background: var(--mark-soft); border-bottom: 1px solid var(--line); font-size: .9rem; }
+  .plan-banner .primary { padding: 6px 12px; font-size: .85rem; }
+  /* Water + skin care */
+  .chk-row { display: flex; align-items: center; gap: 12px; }
+  .care { border-top: 1px solid var(--line); padding: 12px 0; }
+  .care:first-child { border-top: 0; }
+  .care-head { display: flex; align-items: center; gap: 10px; justify-content: space-between; flex-wrap: wrap; }
+  .slots { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .slot { display: inline-flex; flex-direction: row; color: var(--ink); align-items: center; gap: 6px; cursor: pointer; border: 1px solid var(--line); border-radius: 999px; padding: 4px 6px 4px 10px; background: var(--bg); font-size: .9rem; }
+  .slot.done { background: var(--mark); border-color: var(--mark); color: #1B2A41; font-weight: 700; }
+  .slot input[type=checkbox] { width: 18px; height: 18px; accent-color: var(--ink); }
+  .slot .x { border: 0; background: none; color: var(--muted); cursor: pointer; font-size: .95rem; padding: 0 2px; }
+  .add-slot { display: inline-flex; gap: 6px; align-items: center; }
+  .add-slot input { padding: 4px 6px; font-size: .85rem; }
+  /* Dot reading checks */
+  .readchk { display: flex; gap: 18px; flex-wrap: wrap; margin: 14px 0 0; padding: 10px 14px; background: var(--bg); border-radius: 12px; }
+  .readchk label { flex-direction: row; align-items: center; gap: 8px; color: var(--ink); font-size: .92rem; }
+  .readchk input { width: 20px; height: 20px; accent-color: var(--ink); }
+  .ttl .rd { font-size: .75rem; margin-left: 4px; }
+  dialog.cal-like { border: 1px solid var(--line); border-radius: 16px; background: var(--panel); color: var(--ink); padding: 18px; width: min(460px, calc(100vw - 24px)); max-height: calc(100% - 24px); overflow: auto; }
+  dialog.cal-like::backdrop { background: rgba(10, 18, 30, .45); }
+  .cal-grid button.nodata { opacity: .4; }
+  /* Case comps */
+  .cc { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; margin-bottom: 12px; display: grid; grid-template-columns: 1fr auto; gap: 6px 14px; }
+  .cc.past { opacity: .6; }
+  .cc h3 { margin: 0; font-size: 1.05rem; }
+  .cc .meta { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: .88rem; color: var(--muted); grid-column: 1 / -1; }
+  .cc .meta b { color: var(--ink); }
+  .cc .due { font-weight: 800; white-space: nowrap; text-align: right; }
+  .cc .due.soon { color: var(--bad); }
+  .cc .acts { grid-column: 1 / -1; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .cc select { padding: 4px 8px; font-size: .85rem; }
+
   /* Calendar */
   dialog#calDlg { border: 1px solid var(--line); border-radius: 16px; background: var(--panel); color: var(--ink); padding: 18px; width: min(460px, calc(100vw - 24px)); max-height: calc(100% - 24px); overflow: auto; }
   dialog#calDlg::backdrop { background: rgba(10, 18, 30, .45); }
@@ -308,11 +342,13 @@
     <button data-view="rough" aria-current="false">Rough</button>
     <button data-view="gita" aria-current="false">Gita</button>
     <button data-view="hindi" aria-current="false">Hindi</button>
+    <button data-view="cases" aria-current="false">Case Comps</button>
     <button data-view="ai" aria-current="false">Ask AI</button>
   </nav>
   <div class="who" id="who" hidden><button class="rename-btn" id="renameBtn" title="Rename tabs" aria-label="Rename tabs">✎ Tabs</button><span id="whoName"></span><button id="signOut">Sign out</button></div>
 </div>
 
+<div class="plan-banner" id="planBanner" hidden><span id="planText"></span><button class="primary" id="planBtn"></button></div>
 <main>
   <!-- SIGN IN -->
   <div class="view signin" id="v-signin">
@@ -329,7 +365,7 @@
         <input id="dnQ" type="search" placeholder="Search summaries" aria-label="Search summaries">
         <button class="pill" id="dnRand" title="Open a random past summary">Revise one</button>
       </div>
-      <div style="padding:0 16px 12px"><button class="primary" id="dnNew" style="width:100%">+ Summarise an article</button></div>
+      <div style="padding:0 16px 12px;display:flex;gap:8px"><button class="primary" id="dnNew" style="flex:1">+ Summarise an article</button><button class="pill" id="dnCal" title="Reading log">📅 Log</button></div>
       <div class="dn-count" id="dnCount">Loading…</div>
       <ul class="dn-list" id="dnList"></ul>
     </aside>
@@ -488,6 +524,38 @@
     </div>
   </div>
 
+  <!-- CASE COMPS -->
+  <div class="view" id="v-cases" hidden>
+    <div class="wrap" style="max-width:860px">
+      <div class="panel">
+        <div class="row" style="justify-content:space-between;align-items:center">
+          <div><h2 style="margin:0">Case competitions</h2><div class="muted" id="ccLast"></div></div>
+          <button class="primary" id="ccScan">📥 Scan my email</button>
+        </div>
+        <p class="muted" id="ccMsg" style="margin-bottom:0"></p>
+        <details style="margin-top:8px"><summary class="muted">🔒 How your email is used</summary>
+          <ul class="muted" style="margin:6px 0 0;padding-left:1.2em;font-size:.85rem">
+            <li>Read-only access, only when you press Scan. Nothing is sent, deleted or changed in your mailbox.</li>
+            <li>Only emails matching case-competition keywords from the last 90 days are opened.</li>
+            <li>Their text is sent to Gemini only to pull out: name, organiser, registration deadline, team size and link. Note: on Google's free plan, Google may use what's sent to improve its products.</li>
+            <li>Only those extracted details are saved, privately to your account. Email text is never stored, and the access is dropped right after the scan.</li>
+          </ul>
+        </details>
+      </div>
+      <div id="ccList"></div>
+      <details class="panel" style="padding:14px 20px"><summary style="font-weight:700">+ Add one manually</summary>
+        <form class="row" id="ccForm" style="margin-top:10px">
+          <label style="flex:2;min-width:180px">Name<input id="ccName" required></label>
+          <label style="flex:1;min-width:140px">Organiser<input id="ccOrg"></label>
+          <label>Registration ends<input type="date" id="ccEnd"></label>
+          <label style="width:110px">Team size<input id="ccTeam" placeholder="e.g. 2-4"></label>
+          <label style="flex:2;min-width:180px">Link<input id="ccLink" type="url" placeholder="https://"></label>
+          <button class="pill" type="submit">Add</button>
+        </form>
+      </details>
+    </div>
+  </div>
+
   <!-- ASK AI -->
   <div class="view" id="v-ai" hidden>
     <div class="wrap chat-wrap">
@@ -517,6 +585,30 @@
         </div>
         <ul class="meds" id="medList"></ul>
         <p class="muted" style="margin-bottom:0">Took something on an earlier day? Open the Calendar, tap that day and tick it.</p>
+      </div>
+      <div class="panel">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+          <h2 style="margin:0">💧 Water</h2><span class="muted" id="waterProg"></span>
+        </div>
+        <div class="bar-p" style="margin-bottom:6px"><i id="waterBar" style="width:0"></i></div>
+        <ul class="meds" id="waterList"></ul>
+        <details style="margin-top:6px"><summary class="muted">🔔 Reminders every 2 hours</summary>
+          <div class="row" style="margin-top:8px">
+            <label style="flex-direction:row;align-items:center;gap:8px;color:var(--ink)"><input type="checkbox" id="wOn"> Remind me</label>
+            <label>From<input type="time" id="wFrom" value="08:00"></label>
+            <label>To<input type="time" id="wTo" value="20:00"></label>
+            <button class="pill" id="wSave">Save</button>
+          </div>
+          <p class="muted" id="wInfo" style="margin-bottom:0"></p>
+        </details>
+      </div>
+      <div class="panel">
+        <h2>🧴 Skin care</h2>
+        <div id="careList"></div>
+        <form class="row" id="careForm" style="margin-top:10px">
+          <label style="flex:1;min-width:150px">Add an item<input id="careName" placeholder="e.g. Lip balm" required></label>
+          <button class="pill" type="submit">Add</button>
+        </form>
       </div>
       <div class="panel">
         <h2>Last 14 days</h2>
@@ -606,6 +698,23 @@
   </div>
 </dialog>
 
+<dialog id="dotCalDlg" class="cal-like" aria-label="Reading log">
+  <div class="cal-head">
+    <button class="pill" id="dcPrev" aria-label="Previous month">‹</button>
+    <h2 id="dcTitle" style="margin:0"></h2>
+    <button class="pill" id="dcNext" aria-label="Next month">›</button>
+    <button class="ghost" id="dcClose" style="margin-left:auto">Close</button>
+  </div>
+  <div class="cal-grid cal-dow"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
+  <div class="cal-grid" id="dcGrid"></div>
+  <div class="cal-legend">
+    <span><i class="lg full"></i>Article + summary read</span>
+    <span><i class="lg part"></i>One of the two</span>
+    <span><i class="lg miss"></i>Not read</span>
+  </div>
+  <div id="dcDay" class="cal-day"></div>
+</dialog>
+
 <dialog id="calDlg" aria-label="Medicine calendar">
   <div class="cal-head">
     <button class="pill" id="calPrev" aria-label="Previous month">‹</button>
@@ -637,7 +746,7 @@
 </script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, setPersistence, inMemoryPersistence } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, doc, collection, setDoc, addDoc, deleteDoc, updateDoc, getDoc, onSnapshot, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -726,6 +835,9 @@ onAuthStateChanged(auth, user => {
   startCfa(user.uid);
   startMeds(user.uid);
   startTodo(user.uid);
+  startPlanner(user.uid);
+  startDotLog(user.uid);
+  startCases(user.uid);
   unsubs.push(onSnapshot(doc(fs, "users", user.uid, "meta", "settings"), s => { tabNames = (s.data() || {}).tabNames || {}; applyTabNames(); }));
   startGita(user.uid);
   startHindi(user.uid);
@@ -768,6 +880,8 @@ function renderNotes(q) {
     b.innerHTML = `<span class="when"></span><span class="ttl"></span>`;
     b.querySelector(".when").textContent = fmt(n.date);
     b.querySelector(".ttl").textContent = n.title;
+    const rs = dotLog[n.date] || {};
+    if (rs.a || rs.s) { const t = document.createElement("span"); t.className = "rd"; t.textContent = rs.a && rs.s ? "✅" : "◐"; t.title = rs.a && rs.s ? "Article and summary read" : "Partly read"; b.querySelector(".ttl").appendChild(t); }
     b.setAttribute("aria-current", curNote === n);
     b.onclick = () => openNote(n);
     li.appendChild(b); ul.appendChild(li);
@@ -781,6 +895,11 @@ function openNote(n) {
   page.querySelector("h3").textContent = n.title;
   if (n.url) { const a = document.createElement("a"); a.href = n.url; a.target = "_blank"; a.rel = "noopener"; a.textContent = "Read the original on Dot"; page.querySelector(".src").appendChild(a); }
   page.querySelector(".body").innerHTML = window.marked ? marked.parse(n.body) : n.body;
+  const rc = document.createElement("div"); rc.className = "readchk";
+  const st = dotLog[n.date] || {};
+  rc.innerHTML = `<label><input type="checkbox" data-k="a" ${st.a ? "checked" : ""}> I read the article</label><label><input type="checkbox" data-k="s" ${st.s ? "checked" : ""}> I read this summary</label>`;
+  rc.querySelectorAll("input").forEach(c => c.onchange = () => setDotRead(n.date, c.dataset.k, c.checked));
+  page.querySelector(".src").after(rc);
   page.querySelector(".back").onclick = () => $("v-dot").classList.remove("reading");
   $("dnRead").innerHTML = ""; $("dnRead").appendChild(page); $("dnRead").scrollTop = 0;
   $("v-dot").classList.add("reading");
@@ -1327,10 +1446,19 @@ const medsDoc = () => doc(fs, "users", uid, "meta", "meds");
 const logDoc = date => doc(fs, "users", uid, "medlog", date);
 function mondayOf(d = new Date()) { const m = new Date(d); m.setHours(0, 0, 0, 0); m.setDate(m.getDate() - ((m.getDay() + 6) % 7)); return dstr(m); }
 
+const DEFAULT_CARE = [
+  { id: "moist", name: "Moisturizer", group: "care", times: ["08:00", "21:00"], remind: false },
+  { id: "sunsc", name: "Sunscreen", group: "care", times: ["08:30", "12:30", "15:30"], remind: false },
+];
+let waterCfg = { remind: true, from: "08:00", to: "20:00" };
 function startMeds(u) {
   unsubs.push(onSnapshot(medsDoc(), s => {
-    if (!s.exists()) { setDoc(medsDoc(), { list: DEFAULT_MEDS }).catch(console.error); return; }
-    meds = s.data().list || []; renderMeds();
+    if (!s.exists()) { setDoc(medsDoc(), { list: [...DEFAULT_MEDS, ...DEFAULT_CARE], careSeeded: true }).catch(console.error); return; }
+    const d = s.data();
+    meds = d.list || [];
+    waterCfg = { ...waterCfg, ...(d.water || {}) };
+    if (!d.careSeeded) { const missing = DEFAULT_CARE.filter(c => !meds.some(m => m.id === c.id)); setDoc(medsDoc(), { list: [...meds, ...missing], careSeeded: true }, { merge: true }).catch(console.error); }
+    renderMeds();
   }));
   unsubs.push(onSnapshot(query(collection(fs, "users", u, "medlog"), orderBy("date", "desc"), limit(400)), q => {
     medLog = {}; q.docs.forEach(d => medLog[d.id] = d.data()); renderMeds();
@@ -1354,8 +1482,9 @@ function renderMeds() {
   const today = dstr(new Date());
   $("medToday").textContent = "Today, " + new Date().toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "short" });
   const ul = $("medList"); ul.innerHTML = "";
-  if (!meds.length) ul.innerHTML = `<li class="muted">No medicines yet. Add one below.</li>`;
-  for (const m of meds) {
+  const medsOnly = meds.filter(m => m.group !== "care");
+  if (!medsOnly.length) ul.innerHTML = `<li class="muted">No medicines yet. Add one below.</li>`;
+  for (const m of medsOnly) {
     let done, sub, date;
     if (m.freq === "weekly") {
       const lt = lastTaken(m.id);
@@ -1393,7 +1522,8 @@ function renderMeds() {
     ul.appendChild(li);
   }
 
-  const daily = meds.filter(m => m.freq !== "weekly");
+  const daily = meds.filter(m => m.freq !== "weekly" && m.group !== "care");
+  renderWater(); renderCare(); renderPlanBanner();
   const strip = $("medStrip"); strip.innerHTML = "";
   for (let i = 13; i >= 0; i--) {
     const d = new Date(); d.setDate(d.getDate() - i);
@@ -1420,9 +1550,9 @@ $("medForm").onsubmit = e => {
 let calMonth = new Date(); calMonth.setDate(1);
 let calSel = null;
 function dayStatus(ds) {
-  const daily = meds.filter(m => m.freq !== "weekly");
+  const daily = meds.filter(m => m.freq !== "weekly" && m.group !== "care");
   const n = daily.filter(m => takenOn(ds, m.id)).length;
-  const weekly = meds.some(m => m.freq === "weekly" && takenOn(ds, m.id));
+  const weekly = meds.some(m => m.freq === "weekly" && m.group !== "care" && takenOn(ds, m.id));
   return { cls: !daily.length ? "" : n === daily.length ? "full" : n ? "part" : "miss", weekly };
 }
 function renderCal() {
@@ -1459,13 +1589,15 @@ function renderCalDay() {
   const h = document.createElement("div"); h.style.fontWeight = "800"; h.style.marginBottom = "4px";
   h.textContent = new Date(calSel + "T00:00:00").toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long" });
   box.appendChild(h);
-  for (const m of meds) {
+  const addChk = (key, label) => {
     const l = document.createElement("label"); l.className = "chk";
-    const c = document.createElement("input"); c.type = "checkbox"; c.checked = takenOn(calSel, m.id);
-    c.onchange = () => setTaken(calSel, m.id, c.checked);
-    l.appendChild(c); l.append(m.name + (m.freq === "weekly" ? " (weekly)" : ""));
-    box.appendChild(l);
-  }
+    const c = document.createElement("input"); c.type = "checkbox"; c.checked = takenOn(calSel, key);
+    c.onchange = () => setTaken(calSel, key, c.checked);
+    l.appendChild(c); l.append(label); box.appendChild(l);
+  };
+  for (const m of meds.filter(m => m.group !== "care")) addChk(m.id, m.name + (m.freq === "weekly" ? " (weekly)" : ""));
+  WATER.forEach(w => addChk(w.id, `💧 Water, ${w.label.toLowerCase()} (1 L)`));
+  for (const m of meds.filter(m => m.group === "care")) (m.times || []).forEach(t => addChk(`${m.id}@${t}`, `🧴 ${m.name} at ${fmtTime(t)}`));
 }
 $("calOpen").onclick = () => { calMonth = new Date(); calMonth.setDate(1); calSel = null; $("calDlg").showModal(); renderCal(); };
 $("calClose").onclick = () => $("calDlg").close();
@@ -1505,6 +1637,7 @@ async function createEvent(summary, start, rrule) {
     summary: "⏰ " + summary, description: "Reminder from Mahendra Kumar Hub",
     start: { dateTime: localIso(start), timeZone: TZ }, end: { dateTime: localIso(end), timeZone: TZ },
     reminders: { useDefault: false, overrides: [{ method: "popup", minutes: 0 }] },
+    visibility: "private", transparency: "transparent",
     ...(rrule ? { recurrence: [rrule] } : {})
   });
   return ev.id;
@@ -1542,28 +1675,20 @@ $("remSave").onclick = async () => {
   const { kind, item } = remCtx;
   $("remSave").disabled = true; $("remMsg").textContent = "Adding to your Google Calendar…";
   try {
-    if (item.eventId) await deleteEvent(item.eventId).catch(() => {});
+    await calendarToken();
+    if (kind === "todo" && item.eventId) await deleteEvent(item.eventId).catch(() => {});
     if (kind === "todo") {
       const at = new Date($("remAt").value);
       if (isNaN(at) || at <= new Date()) throw new Error("Pick a date and time in the future.");
       const eventId = await createEvent(item.text, at);
       await updateDoc(doc(fs, "users", uid, "todos", item.id), { remindAt: at.getTime(), eventId });
     } else {
-      const [hh, mm] = $("remTime").value.split(":").map(Number);
-      const start = new Date(); start.setHours(hh, mm, 0, 0);
-      let rrule = "RRULE:FREQ=DAILY", remindDay = null;
-      if (item.freq === "weekly") {
-        remindDay = parseInt($("remDay").value);
-        start.setDate(start.getDate() + ((remindDay - start.getDay() + 7) % 7));
-        rrule = "RRULE:FREQ=WEEKLY";
-      }
-      if (start <= new Date()) start.setDate(start.getDate() + (item.freq === "weekly" ? 7 : 1));
-      const eventId = await createEvent(remCtx.eventTitle || `Take ${item.name}`, start, rrule);
-      if (remCtx.save) await remCtx.save({ remindTime: $("remTime").value, eventId });
-      else {
-        const list = meds.map(x => x.id === item.id ? { ...x, remindTime: $("remTime").value, remindDay, eventId } : x);
-        await setDoc(medsDoc(), { list });
-      }
+      const remindDay = item.freq === "weekly" ? parseInt($("remDay").value) : null;
+      if (remCtx.save) await remCtx.save({ remindTime: $("remTime").value });
+      else await setDoc(medsDoc(), { list: meds.map(x => x.id === item.id ? { ...x, remindTime: $("remTime").value, remindDay } : x) }, { merge: true });
+      $("remDlg").close();
+      syncReminders();
+      return;
     }
     $("remDlg").close();
   } catch (e) {
@@ -1575,13 +1700,235 @@ $("remDel").onclick = async () => {
   const { kind, item } = remCtx;
   $("remMsg").textContent = "Removing…";
   try {
-    if (item.eventId) await deleteEvent(item.eventId);
-    if (kind === "todo") await updateDoc(doc(fs, "users", uid, "todos", item.id), { remindAt: null, eventId: null });
-    else if (remCtx.save) await remCtx.save({ remindTime: null, eventId: null });
-    else await setDoc(medsDoc(), { list: meds.map(x => x.id === item.id ? { ...x, remindTime: null, remindDay: null, eventId: null } : x) });
+    if (kind === "todo") {
+      if (item.eventId) await deleteEvent(item.eventId);
+      await updateDoc(doc(fs, "users", uid, "todos", item.id), { remindAt: null, eventId: null });
+      $("remDlg").close(); return;
+    }
+    if (remCtx.save) await remCtx.save({ remindTime: null });
+    else await setDoc(medsDoc(), { list: meds.map(x => x.id === item.id ? { ...x, remindTime: null, remindDay: null } : x) }, { merge: true });
     $("remDlg").close();
+    syncReminders();
   } catch (e) { $("remMsg").textContent = e.message || "Couldn't remove the reminder."; }
 };
+
+/* ================= Dot reading log ================= */
+let dotLog = {}, dcMonth = new Date(), dcSel = null;
+const dotDoc = () => doc(fs, "users", uid, "meta", "dotlog");
+function startDotLog(u) {
+  unsubs.push(onSnapshot(doc(fs, "users", u, "meta", "dotlog"), s => {
+    dotLog = (s.data() || {}).d || {};
+    renderNotes($("dnQ").value); if ($("dotCalDlg").open) renderDotCal();
+  }));
+}
+function setDotRead(date, k, v) {
+  dotLog[date] = { ...(dotLog[date] || {}), [k]: v };
+  setDoc(dotDoc(), { d: { [date]: { [k]: v } } }, { merge: true }).catch(console.error);
+  renderNotes($("dnQ").value); if ($("dotCalDlg").open) renderDotCal();
+}
+function renderDotCal() {
+  const y = dcMonth.getFullYear(), mo = dcMonth.getMonth(), today = dstr(new Date());
+  $("dcTitle").textContent = dcMonth.toLocaleDateString("en-IN", { month: "long", year: "numeric" });
+  const now = new Date();
+  $("dcNext").disabled = y > now.getFullYear() || (y === now.getFullYear() && mo >= now.getMonth());
+  const have = new Set(notes.map(n => n.date));
+  const grid = $("dcGrid"); grid.innerHTML = "";
+  for (let i = 0; i < (new Date(y, mo, 1).getDay() + 6) % 7; i++) grid.appendChild(document.createElement("span"));
+  for (let d = 1; d <= new Date(y, mo + 1, 0).getDate(); d++) {
+    const ds = dstr(new Date(y, mo, d)), b = document.createElement("button"); b.textContent = d;
+    if (ds > today) { b.className = "future"; b.disabled = true; }
+    else if (!have.has(ds)) { b.className = "nodata"; b.title = "No summary saved for this day"; }
+    else { const s = dotLog[ds] || {}; b.className = s.a && s.s ? "full" : (s.a || s.s) ? "part" : "miss"; }
+    if (ds === today) b.classList.add("today");
+    b.setAttribute("aria-pressed", ds === dcSel);
+    b.onclick = () => { dcSel = ds; renderDotCal(); };
+    grid.appendChild(b);
+  }
+  const box = $("dcDay");
+  if (!dcSel) { box.innerHTML = `<p class="muted" style="margin:0">Tap a day to see or change what you read.</p>`; return; }
+  const n = notes.find(x => x.date === dcSel), s = dotLog[dcSel] || {};
+  box.innerHTML = `<div style="font-weight:800;margin-bottom:4px"></div>` + (n ? `<div class="muted" style="margin-bottom:6px"></div>
+    <label class="chk"><input type="checkbox" data-k="a" ${s.a ? "checked" : ""}> Read the article</label>
+    <label class="chk"><input type="checkbox" data-k="s" ${s.s ? "checked" : ""}> Read the summary</label>
+    <button class="pill" id="dcOpen" style="margin-top:6px">Open this summary</button>` : `<p class="muted" style="margin:0">No summary was saved for this day.</p>`);
+  box.firstChild.textContent = new Date(dcSel + "T00:00:00").toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long" });
+  if (n) {
+    box.querySelector(".muted").textContent = n.title;
+    box.querySelectorAll("input").forEach(c => c.onchange = () => setDotRead(dcSel, c.dataset.k, c.checked));
+    $("dcOpen").onclick = () => { $("dotCalDlg").close(); openNote(n); };
+  }
+}
+$("dnCal").onclick = () => { dcMonth = new Date(); dcMonth.setDate(1); dcSel = null; $("dotCalDlg").showModal(); renderDotCal(); };
+$("dcClose").onclick = () => $("dotCalDlg").close();
+$("dotCalDlg").addEventListener("click", e => { if (e.target === $("dotCalDlg")) $("dotCalDlg").close(); });
+$("dcPrev").onclick = () => { dcMonth.setMonth(dcMonth.getMonth() - 1); dcSel = null; renderDotCal(); };
+$("dcNext").onclick = () => { dcMonth.setMonth(dcMonth.getMonth() + 1); dcSel = null; renderDotCal(); };
+
+/* ================= Water ================= */
+const WATER = [{ id: "water_m", label: "Morning" }, { id: "water_a", label: "Afternoon" }, { id: "water_e", label: "Evening" }];
+const fmtTime = t => { const [hh, mm] = t.split(":").map(Number); const d = new Date(); d.setHours(hh, mm); return d.toLocaleTimeString("en-IN", { hour: "numeric", minute: "2-digit", hour12: true }); };
+function waterTimes() {
+  if (!waterCfg.remind) return [];
+  const [fh, fm] = waterCfg.from.split(":").map(Number), [th, tm] = waterCfg.to.split(":").map(Number);
+  const out = []; for (let m = fh * 60 + fm; m <= th * 60 + tm; m += 120) out.push(`${String(Math.floor(m / 60)).padStart(2, "0")}:${String(m % 60).padStart(2, "0")}`);
+  return out;
+}
+function renderWater() {
+  const today = dstr(new Date()), ul = $("waterList"); ul.innerHTML = "";
+  let n = 0;
+  for (const w of WATER) {
+    const done = takenOn(today, w.id); if (done) n++;
+    const li = document.createElement("li");
+    li.innerHTML = `<button class="tick" aria-pressed="${done}">${done ? "✓" : ""}</button><div style="flex:1"><div class="med-name"></div><div class="med-sub">1 litre</div></div>`;
+    li.querySelector(".med-name").textContent = w.label;
+    li.querySelector(".tick").setAttribute("aria-label", (done ? "Undo: " : "Done: ") + w.label + " water");
+    li.querySelector(".tick").onclick = () => setTaken(today, w.id, !done);
+    ul.appendChild(li);
+  }
+  $("waterProg").textContent = `${n} of 3 L today`;
+  $("waterBar").style.width = (n / 3 * 100) + "%";
+  $("wOn").checked = !!waterCfg.remind; $("wFrom").value = waterCfg.from; $("wTo").value = waterCfg.to;
+  const t = waterTimes();
+  $("wInfo").textContent = waterCfg.remind ? `Reminders at ${t.map(fmtTime).join(", ")}.` : "Reminders are off.";
+}
+$("wSave").onclick = async () => {
+  if ($("wFrom").value >= $("wTo").value) { $("wInfo").textContent = "'To' must be later than 'From'."; return; }
+  waterCfg = { remind: $("wOn").checked, from: $("wFrom").value, to: $("wTo").value };
+  await setDoc(medsDoc(), { water: waterCfg }, { merge: true });
+  syncReminders();
+};
+
+/* ================= Skin care (multiple timings) ================= */
+function saveCare(list) { return setDoc(medsDoc(), { list: [...meds.filter(m => m.group !== "care"), ...list] }, { merge: true }); }
+function renderCare() {
+  const today = dstr(new Date()), box = $("careList"); box.innerHTML = "";
+  const care = meds.filter(m => m.group === "care");
+  if (!care.length) box.innerHTML = `<p class="muted" style="margin:0">Nothing here yet.</p>`;
+  care.forEach(m => {
+    const times = [...(m.times || [])].sort();
+    const d = document.createElement("div"); d.className = "care";
+    d.innerHTML = `<div class="care-head"><div><b></b> <span class="muted cnt"></span></div><div class="row" style="gap:6px"><button class="bell"></button><button class="ghost rm">Remove</button></div></div><div class="slots"></div>`;
+    d.querySelector("b").textContent = m.name;
+    d.querySelector(".cnt").textContent = `${times.filter(t => takenOn(today, `${m.id}@${t}`)).length} of ${times.length} today`;
+    const bell = d.querySelector(".bell");
+    bell.innerHTML = BELL_SVG + `<span>${m.remind ? "On" : "Off"}</span>`;
+    bell.classList.toggle("on", !!m.remind);
+    bell.title = "Remind me at each of these times";
+    bell.onclick = async () => { await saveCare(care.map(x => x.id === m.id ? { ...x, remind: !x.remind } : x)); syncReminders(); };
+    d.querySelector(".rm").onclick = async () => { if (confirm(`Remove ${m.name}?`)) { await saveCare(care.filter(x => x.id !== m.id)); if (m.remind) syncReminders(); } };
+    const slots = d.querySelector(".slots");
+    times.forEach(t => {
+      const key = `${m.id}@${t}`, done = takenOn(today, key);
+      const s = document.createElement("label"); s.className = "slot" + (done ? " done" : "");
+      s.innerHTML = `<input type="checkbox" ${done ? "checked" : ""}><span></span><button class="x" type="button" title="Remove this time">×</button>`;
+      s.querySelector("span").textContent = fmtTime(t);
+      s.querySelector("input").onchange = e => setTaken(today, key, e.target.checked);
+      s.querySelector(".x").onclick = async e => { e.preventDefault(); await saveCare(care.map(x => x.id === m.id ? { ...x, times: times.filter(y => y !== t) } : x)); if (m.remind) syncReminders(); };
+      slots.appendChild(s);
+    });
+    const add = document.createElement("span"); add.className = "add-slot";
+    add.innerHTML = `<input type="time" aria-label="New time"><button class="pill" type="button">+ time</button>`;
+    add.querySelector("button").onclick = async () => {
+      const t = add.querySelector("input").value; if (!t || times.includes(t)) return;
+      await saveCare(care.map(x => x.id === m.id ? { ...x, times: [...times, t].sort() } : x));
+      if (m.remind) syncReminders();
+    };
+    slots.appendChild(add);
+    box.appendChild(d);
+  });
+}
+$("careForm").onsubmit = async e => {
+  e.preventDefault();
+  const name = $("careName").value.trim(); if (!name) return;
+  $("careName").value = "";
+  await saveCare([...meds.filter(m => m.group === "care"), { id: "c" + Date.now(), name, group: "care", times: ["09:00"], remind: false }]);
+};
+
+/* ================= Weekly reminder planner =================
+   Reminders go into Google Calendar one week at a time (Monday to Sunday),
+   as private events marked "free", so the calendar never fills up months ahead. */
+let remState = { weeks: {} };
+const remDoc = () => doc(fs, "users", uid, "meta", "reminders");
+function mondayOf2(d = new Date()) { const m = new Date(d); m.setHours(0, 0, 0, 0); m.setDate(m.getDate() - ((m.getDay() + 6) % 7)); return m; }
+function desiredReminders() {
+  const out = [];
+  for (const m of meds) {
+    if (m.group === "care") { if (m.remind) (m.times || []).forEach(t => out.push({ title: `${m.name}`, time: t, days: "all" })); continue; }
+    if (!m.remindTime) continue;
+    out.push({ title: `Take ${m.name}`, time: m.remindTime, days: m.freq === "weekly" ? [m.remindDay ?? 0] : "all" });
+  }
+  waterTimes().forEach(t => out.push({ title: "💧 Drink water", time: t, days: "all" }));
+  if (gState.remindTime) out.push({ title: "Gita: today's sloka", time: gState.remindTime, days: "all" });
+  if (hState.remindTime) out.push({ title: "Hindi: 10 minutes", time: hState.remindTime, days: "all" });
+  return out.sort((a, b) => (a.time + a.title).localeCompare(b.time + b.title));
+}
+const planSig = () => JSON.stringify(desiredReminders());
+function legacyEventIds() {
+  return [...meds.filter(m => m.eventId).map(m => m.eventId), gState.eventId, hState.eventId].filter(Boolean);
+}
+function startPlanner(u) {
+  unsubs.push(onSnapshot(doc(fs, "users", u, "meta", "reminders"), s => { remState = { weeks: {}, ...(s.data() || {}) }; renderPlanBanner(); }));
+}
+function planNeeded() {
+  const want = desiredReminders(), sig = planSig();
+  const cur = dstr(mondayOf2()), nxtD = mondayOf2(); nxtD.setDate(nxtD.getDate() + 7); const nxt = dstr(nxtD);
+  const curW = remState.weeks[cur], nxtW = remState.weeks[nxt];
+  const weekend = [0, 6].includes(new Date().getDay());
+  if (legacyEventIds().length) return { text: "Your reminders now go into Google Calendar one week at a time, so it stays clean.", btn: "Tidy my calendar", weeks: weekend ? [cur, nxt] : [cur] };
+  if (!want.length && !curW?.ids?.length && !nxtW?.ids?.length) return null;
+  if (!curW || curW.sig !== sig) return { text: want.length ? "This week's reminders aren't in your Google Calendar yet." : "Remove old reminders from your calendar.", btn: want.length ? "Add this week's reminders" : "Update calendar", weeks: [cur, ...(nxtW ? [nxt] : [])] };
+  if (nxtW && nxtW.sig !== sig) return { text: "Your reminder times changed.", btn: "Update calendar", weeks: [nxt] };
+  if (weekend && !nxtW && want.length) return { text: "New week ahead: add next week's reminders to your calendar.", btn: "Add next week", weeks: [nxt] };
+  return null;
+}
+function renderPlanBanner() {
+  if (!uid) return;
+  const need = planNeeded();
+  $("planBanner").hidden = !need;
+  if (need) { $("planText").textContent = "🔔 " + need.text; $("planBtn").textContent = need.btn; $("planBtn").disabled = false; }
+}
+async function scheduleWeek(monKey) {
+  const mon = new Date(monKey + "T00:00:00"), now = new Date();
+  const old = (remState.weeks[monKey] || {}).ids || [];
+  for (const id of old) await deleteEvent(id).catch(() => {});
+  const ids = [];
+  for (const r of desiredReminders()) {
+    const [hh, mm] = r.time.split(":").map(Number);
+    const days = [];
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(mon); d.setDate(d.getDate() + i); d.setHours(hh, mm, 0, 0);
+      if (d <= now) continue;
+      if (r.days === "all" || r.days.includes(d.getDay())) days.push(d);
+    }
+    if (!days.length) continue;
+    if (r.days === "all" && days.length > 1) ids.push(await createEvent(r.title, days[0], `RRULE:FREQ=DAILY;COUNT=${days.length}`));
+    else for (const d of days) ids.push(await createEvent(r.title, d));
+  }
+  remState.weeks[monKey] = { ids, sig: planSig(), at: Date.now() };
+}
+let syncing = false;
+async function syncReminders(weeksArg) {
+  if (syncing) return; syncing = true;
+  const need = weeksArg || (planNeeded() || {}).weeks || [];
+  $("planBanner").hidden = false; $("planText").textContent = "🔔 Updating your Google Calendar…"; $("planBtn").disabled = true;
+  try {
+    await calendarToken();
+    // remove the old never-ending reminders (one-time tidy-up)
+    for (const id of legacyEventIds()) await deleteEvent(id).catch(() => {});
+    if (meds.some(m => m.eventId)) await setDoc(medsDoc(), { list: meds.map(m => { const { eventId, ...rest } = m; return rest; }) }, { merge: true });
+    if (gState.eventId) await setDoc(gDoc(), { eventId: null }, { merge: true });
+    if (hState.eventId) await setDoc(hDoc(), { eventId: null }, { merge: true });
+    for (const wk of need) await scheduleWeek(wk);
+    const keep = Object.fromEntries(Object.entries(remState.weeks).filter(([k]) => k >= dstr(new Date(Date.now() - 21 * 864e5))));
+    await setDoc(remDoc(), { weeks: keep });
+    syncing = false; renderPlanBanner();
+  } catch (e) {
+    syncing = false;
+    $("planText").textContent = "🔔 " + (e.code === "auth/popup-closed-by-user" ? "Permission window was closed." : (e.message || "Couldn't update the calendar.")) + " Try again.";
+    $("planBtn").disabled = false; $("planBtn").textContent = "Try again";
+  }
+}
+$("planBtn").onclick = () => syncReminders();
 
 /* ================= To Do ================= */
 let todos = [];
@@ -1682,18 +2029,41 @@ async function loadGitaData(k) {
   return GITA[k];
 }
 function startGita(u) {
-  unsubs.push(onSnapshot(gDoc(), s => { gState = { bg: 0, anu: 0, perDay: 1, days: [], ...(s.data() || {}) }; renderGita(); }));
+  let first = true;
+  unsubs.push(onSnapshot(gDoc(), s => {
+    gState = { bg: 0, anu: 0, perDay: 1, days: [], ...(s.data() || {}) };
+    if (first) {                                   // reopen exactly where you left off
+      first = false;
+      if (gState.lastTab === "bg" || gState.lastTab === "anu") {
+        gTab = gState.lastTab;
+        document.querySelectorAll("[data-gt]").forEach(x => x.setAttribute("aria-selected", x.dataset.gt === gTab));
+      }
+      const lv = (gState.lastView || {})[gTab];
+      gView = lv != null && lv !== (gState[gTab] || 0) ? lv : null;
+    }
+    renderGita(); renderPlanBanner();
+  }));
   unsubs.push(onSnapshot(query(collection(fs, "users", u, "gitaSaved"), orderBy("createdAt", "desc")), q => {
     gSaved = q.docs.map(d => ({ id: d.id, ...d.data() })); if (gTab === "saved") renderGita(); else renderGitaCards();
   }));
 }
 document.querySelectorAll("[data-gt]").forEach(b => b.onclick = () => {
-  gTab = b.dataset.gt; gView = null;
+  gTab = b.dataset.gt;
+  const lv = (gState.lastView || {})[gTab];
+  gView = gTab !== "saved" && lv != null && lv !== (gState[gTab] || 0) ? lv : null;
   document.querySelectorAll("[data-gt]").forEach(x => x.setAttribute("aria-selected", x === b));
   renderGita();
 });
 $("gPerDay").onchange = e => setDoc(gDoc(), { perDay: +e.target.value }, { merge: true });
 $("gBack").onclick = () => { gView = null; renderGita(); };
+let gPosTimer = null;
+function gSavePos(idx) {
+  if (gTab === "saved") return;
+  const lv = gState.lastView || {};
+  if (lv[gTab] === idx && gState.lastTab === gTab) return;
+  clearTimeout(gPosTimer);
+  gPosTimer = setTimeout(() => setDoc(gDoc(), { lastTab: gTab, lastView: { ...lv, [gTab]: idx } }, { merge: true }).catch(() => {}), 800);
+}
 
 function gItem(k, idx) {
   const d = GITA[k], refs = gitaRefs(k), r = refs[idx]; if (!r) return null;
@@ -1726,6 +2096,7 @@ async function renderGita() {
   $("gSource").textContent = gTab === "bg" ? "Sanskrit text: gita/gita open dataset. Translations and explanations are written by AI." : d.source + " Explanations are written by AI.";
   const pos = Math.min(gState[gTab] || 0, refs.length - 1);
   const cur = gView != null ? gView : pos;
+  gSavePos(cur);
   const r = refs[cur];
   $("gProgress").textContent = `${gTab === "bg" ? "Sloka" : "Passage"} ${pos + 1} of ${refs.length} · ${Math.round(pos / refs.length * 100)}% complete`;
   $("gToday").textContent = gView != null ? "Browsing" : "Today's reading";
@@ -1939,7 +2310,7 @@ const H_BOXES = [0, 1, 3, 7, 14, 30, 60];
 let hState = { lesson: 0, days: [], quizDone: {} }, hWords = [], hLessonData = null, hTimerLeft = 600, hTimerRun = null;
 const hDoc = () => doc(fs, "users", uid, "meta", "hindi");
 function startHindi(u) {
-  unsubs.push(onSnapshot(hDoc(), s => { hState = { lesson: 0, days: [], quizDone: {}, ...(s.data() || {}) }; renderHindiTop(); if (!hLessonData || hLessonData.n !== hState.lesson) loadHindiLesson(); }));
+  unsubs.push(onSnapshot(hDoc(), s => { hState = { lesson: 0, days: [], quizDone: {}, ...(s.data() || {}) }; renderHindiTop(); renderPlanBanner(); if (!hLessonData || hLessonData.n !== hState.lesson) loadHindiLesson(); }));
   unsubs.push(onSnapshot(collection(fs, "users", u, "hindiWords"), q => { hWords = q.docs.map(d => ({ id: d.id, ...d.data() })); renderHindiTop(); renderReview(); }));
 }
 document.querySelectorAll("[data-ht]").forEach(b => b.onclick = () => {
@@ -2091,6 +2462,128 @@ Reply mostly in simple Hindi at their level. Always write Hindi in Devanagari, t
   $("hChatSend").disabled = false;
 };
 
+/* ================= Case competitions (from Gmail, read-only) ================= */
+let cases = [], ccMeta = { seen: [] };
+const ccCol = () => collection(fs, "users", uid, "caseComps");
+const ccMetaDoc = () => doc(fs, "users", uid, "meta", "casescan");
+function startCases(u) {
+  unsubs.push(onSnapshot(collection(fs, "users", u, "caseComps"), q => { cases = q.docs.map(d => ({ id: d.id, ...d.data() })); renderCases(); }));
+  unsubs.push(onSnapshot(doc(fs, "users", u, "meta", "casescan"), s => { ccMeta = { seen: [], ...(s.data() || {}) }; renderCasesHead(); }));
+}
+function renderCasesHead() {
+  $("ccLast").textContent = ccMeta.last ? `Last scanned ${new Date(ccMeta.last).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit" })}${ccMeta.account ? " · " + ccMeta.account : ""}` : "Not scanned yet";
+}
+function renderCases() {
+  const today = dstr(new Date()), box = $("ccList"); box.innerHTML = "";
+  const up = cases.filter(c => c.status !== "skip" && (!c.deadline || c.deadline >= today)).sort((a, b) => (a.deadline || "9999").localeCompare(b.deadline || "9999"));
+  const past = cases.filter(c => c.status === "skip" || (c.deadline && c.deadline < today)).sort((a, b) => (b.deadline || "").localeCompare(a.deadline || ""));
+  if (!cases.length) { box.innerHTML = `<div class="panel muted">No case competitions yet. Press "Scan my email".</div>`; return; }
+  const card = c => {
+    const d = document.createElement("div"); const isPast = c.deadline && c.deadline < today;
+    d.className = "cc" + (isPast || c.status === "skip" ? " past" : "");
+    const days = c.deadline ? Math.round((new Date(c.deadline + "T00:00:00") - new Date(today + "T00:00:00")) / 864e5) : null;
+    d.innerHTML = `<h3></h3><div class="due"></div><div class="meta"><span>🏢 <b class="org"></b></span><span>📅 Registration ends: <b class="end"></b></span><span>👥 Team: <b class="team"></b></span></div>
+      <div class="acts"><select aria-label="Status"><option value="new">New</option><option value="interested">Interested</option><option value="registered">Registered ✓</option><option value="skip">Not interested</option></select>
+      <a class="ghost lnk" target="_blank" rel="noopener" hidden>Open link ↗</a><span class="muted src" style="font-size:.78rem"></span><button class="ghost del" style="margin-left:auto">Delete</button></div>`;
+    d.querySelector("h3").textContent = c.name;
+    d.querySelector(".org").textContent = c.organiser || "—";
+    d.querySelector(".end").textContent = c.deadline ? new Date(c.deadline + "T00:00:00").toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : (c.deadlineText || "not mentioned");
+    d.querySelector(".team").textContent = c.team || "not mentioned";
+    const due = d.querySelector(".due");
+    if (days != null && !isPast) { due.textContent = days === 0 ? "Ends today" : `${days} day${days === 1 ? "" : "s"} left`; if (days <= 3) due.classList.add("soon"); }
+    else if (isPast) due.textContent = "Closed";
+    if (c.link) { const a = d.querySelector(".lnk"); a.href = c.link; a.hidden = false; }
+    if (c.subject) d.querySelector(".src").textContent = "From email: " + c.subject.slice(0, 70);
+    const sel = d.querySelector("select"); sel.value = c.status || "new";
+    sel.onchange = () => updateDoc(doc(fs, "users", uid, "caseComps", c.id), { status: sel.value });
+    d.querySelector(".del").onclick = () => confirm(`Delete "${c.name}"?`) && deleteDoc(doc(fs, "users", uid, "caseComps", c.id));
+    return d;
+  };
+  up.forEach(c => box.appendChild(card(c)));
+  if (past.length) {
+    const det = document.createElement("details"); det.innerHTML = `<summary class="muted" style="margin:6px 0 10px">Closed or not interested (${past.length})</summary>`;
+    past.forEach(c => det.appendChild(card(c))); box.appendChild(det);
+  }
+}
+$("ccForm").onsubmit = e => {
+  e.preventDefault();
+  addDoc(ccCol(), { name: $("ccName").value.trim(), organiser: $("ccOrg").value.trim(), deadline: $("ccEnd").value || "", team: $("ccTeam").value.trim(), link: $("ccLink").value.trim(), status: "new", createdAt: Date.now(), manual: true });
+  $("ccForm").reset();
+};
+
+// Gmail is read with a separate, temporary sign-in, so your hub login is never changed.
+const mailApp = initializeApp(firebaseConfig, "mail");
+const mailAuth = getAuth(mailApp);
+setPersistence(mailAuth, inMemoryPersistence).catch(() => {});
+const CC_QUERY = 'newer_than:90d ("case competition" OR "case comp" OR "case challenge" OR "case study competition" OR "case championship" OR "case contest" OR "strategy challenge" OR "B-school competition" OR "bschool competition" OR "business case")';
+function b64urlText(s) { try { return new TextDecoder().decode(Uint8Array.from(atob(s.replace(/-/g, "+").replace(/_/g, "/")), c => c.charCodeAt(0))); } catch (e) { return ""; } }
+function mailBody(payload) {
+  let plain = "", html = "";
+  (function walk(p) {
+    if (!p) return;
+    if (p.mimeType === "text/plain" && p.body?.data) plain += b64urlText(p.body.data);
+    else if (p.mimeType === "text/html" && p.body?.data) html += b64urlText(p.body.data);
+    (p.parts || []).forEach(walk);
+  })(payload);
+  let t = plain || html.replace(/<style[\s\S]*?<\/style>/gi, " ").replace(/<br\s*\/?>|<\/p>|<\/div>|<\/li>/gi, "\n").replace(/<a [^>]*href="([^"]+)"[^>]*>/gi, " [$1] ").replace(/<[^>]+>/g, " ");
+  const ta = document.createElement("textarea"); ta.innerHTML = t; t = ta.value;
+  return t.replace(/[ \t]+/g, " ").replace(/\n\s*\n+/g, "\n").trim();
+}
+$("ccScan").onclick = async () => {
+  if (!geminiKey) { $("ccMsg").textContent = "Save your Gemini key in the Ask AI tab first."; return; }
+  const msg = t => $("ccMsg").textContent = t;
+  $("ccScan").disabled = true;
+  let token = null, account = "";
+  try {
+    msg("Choose the email account that receives case competitions…");
+    const p = new GoogleAuthProvider(); p.addScope("https://www.googleapis.com/auth/gmail.readonly"); p.setCustomParameters({ prompt: "select_account" });
+    const res = await signInWithPopup(mailAuth, p);
+    token = GoogleAuthProvider.credentialFromResult(res)?.accessToken; account = res.user?.email || "";
+    const g = async path => { const r = await fetch("https://gmail.googleapis.com/gmail/v1/users/me/" + path, { headers: { Authorization: "Bearer " + token } }); if (!r.ok) throw new Error(r.status === 403 ? "Gmail refused access. Turn on the Gmail API (see setup steps), or your college may block this." : "Gmail error " + r.status); return r.json(); };
+    msg("Searching your inbox…");
+    const list = await g("messages?maxResults=60&q=" + encodeURIComponent(CC_QUERY));
+    const seen = new Set(ccMeta.seen || []);
+    const fresh = (list.messages || []).map(m => m.id).filter(id => !seen.has(id)).slice(0, 40);
+    if (!fresh.length) { msg("No new case-competition emails since the last scan."); await setDoc(ccMetaDoc(), { last: Date.now(), account }, { merge: true }); return; }
+    const mails = [];
+    for (const [i, id] of fresh.entries()) {
+      msg(`Reading ${i + 1} of ${fresh.length} matching emails…`);
+      const m = await g(`messages/${id}?format=full`);
+      const hd = n => (m.payload.headers || []).find(x => x.name.toLowerCase() === n)?.value || "";
+      mails.push({ id, subject: hd("subject"), from: hd("from"), date: hd("date"), body: mailBody(m.payload).slice(0, 2500) });
+    }
+    let added = 0;
+    for (let i = 0; i < mails.length; i += 6) {
+      const batch = mails.slice(i, i + 6);
+      msg(`Picking out the details (${Math.min(i + 6, mails.length)} of ${mails.length})…`);
+      const prompt = `Below are ${batch.length} emails received by an MBA student in India. For EACH email, decide if it announces or invites participation in a case competition or a similar student business competition (case challenge, strategy/marketing/finance case contest, B-school competition). Newsletters, results announcements, webinars and job posts are NOT case competitions.
+For each email return an object: {"i": index, "is_case_comp": true/false, "name": "competition name", "organiser": "company or college organising it", "registration_deadline": "YYYY-MM-DD or null", "deadline_text": "the deadline as written, or null", "team_size": "e.g. '2-4' or '3', or null", "link": "registration link if present, or null"}.
+Use ONLY information in the email. If the year is missing, assume the next occurrence after the email date. Return ONLY a JSON array.
+
+` + batch.map((m, k) => `=== EMAIL ${k} ===\nDate: ${m.date}\nFrom: ${m.from}\nSubject: ${m.subject}\n\n${m.body}`).join("\n\n");
+      let out = [];
+      try { out = parseJSON(await gemini([{ role: "user", parts: [{ text: prompt }] }], true)); } catch (e) { msg("The AI is busy; some emails were skipped. Scan again later to retry them."); continue; }
+      for (const r of (Array.isArray(out) ? out : [])) {
+        const m = batch[r.i]; if (!m) continue;
+        seen.add(m.id);
+        if (!r.is_case_comp || !r.name) continue;
+        const key = (r.name + "|" + (r.organiser || "")).toLowerCase().replace(/\s+/g, " ");
+        const dup = cases.find(c => (c.name + "|" + (c.organiser || "")).toLowerCase().replace(/\s+/g, " ") === key);
+        const data = { name: r.name, organiser: r.organiser || "", deadline: /^\d{4}-\d{2}-\d{2}$/.test(r.registration_deadline || "") ? r.registration_deadline : "", deadlineText: r.deadline_text || "", team: r.team_size || "", link: r.link || "", subject: m.subject, msgId: m.id, receivedAt: m.date };
+        if (dup) { const upd = {}; for (const [k, v] of Object.entries(data)) if (v && !dup[k]) upd[k] = v; if (data.deadline && data.deadline !== dup.deadline) upd.deadline = data.deadline; if (Object.keys(upd).length) await updateDoc(doc(fs, "users", uid, "caseComps", dup.id), upd); }
+        else { await addDoc(ccCol(), { ...data, status: "new", createdAt: Date.now() }); added++; }
+      }
+    }
+    await setDoc(ccMetaDoc(), { seen: [...seen].slice(-800), last: Date.now(), account }, { merge: true });
+    msg(added ? `Found ${added} new case competition${added === 1 ? "" : "s"}.` : "Scan finished. No new case competitions.");
+  } catch (e) {
+    msg(e.code === "auth/popup-closed-by-user" ? "Sign-in window was closed." : (e.message || "Couldn't scan your email."));
+  } finally {
+    token = null; signOut(mailAuth).catch(() => {});        // drop the email access straight away
+    $("ccScan").disabled = false;
+  }
+};
+
 /* ================= Gemini + Ask AI ================= */
 function parseJSON(out) {
   const s = out.replace(/```json|```/g, "").trim();
@@ -2168,6 +2661,7 @@ function hubContext() {
   }).join("; "));
   lines.push(`Gita: Bhagavad Gita at sloka ${(gState.bg || 0) + 1}/701, Anu Gita at passage ${(gState.anu || 0) + 1}. Saved: ${gSaved.map(s => s.key).join(", ") || "none"}.`);
   lines.push(`Hindi: on lesson ${hState.lesson + 1} (${(HINDI_COURSE[hState.lesson] || ["conversation"])[0]}), ${hWords.length} words in review, streak ${hStreak()} days.`);
+  lines.push("Upcoming case competitions: " + (cases.filter(c => c.status !== "skip" && (!c.deadline || c.deadline >= dstr(new Date()))).map(c => `${c.name} (${c.organiser || "?"}, ends ${c.deadline || c.deadlineText || "?"}, team ${c.team || "?"}, ${c.status || "new"})`).join("; ") || "none"));
   lines.push("Open to-dos: " + (todos.filter(t => !t.done).map(t => t.text).join("; ") || "none"));
   lines.push("Rough notes:\n" + (roughs.slice(0, 20).map(r => "- " + r.text.slice(0, 500)).join("\n") || "none"));
   lines.push("Recent Dot news summaries:\n" + (notes.slice(0, 7).map(n => `## ${n.date}: ${n.title}\n${n.body.slice(0, 1500)}`).join("\n\n") || "none"));

@@ -530,7 +530,7 @@
       <div class="panel">
         <div class="row" style="justify-content:space-between;align-items:center">
           <div><h2 style="margin:0">Case competitions</h2><div class="muted" id="ccLast"></div></div>
-          <button class="primary" id="ccScan">📥 Scan my email</button>
+          <div class="row" style="gap:6px"><button class="primary" id="ccScan">📥 Scan my email</button><button class="pill" id="ccFindAll" title="Look up missing dates and team sizes online">🔎 Fill missing details</button><button class="ghost" id="ccRescan" title="Re-read all matching emails, including attachments">Re-read all</button></div>
         </div>
         <p class="muted" id="ccMsg" style="margin-bottom:0"></p>
         <details style="margin-top:8px"><summary class="muted">🔒 How your email is used</summary>
@@ -2475,11 +2475,14 @@ function renderCasesHead() {
 }
 function renderCases() {
   const today = dstr(new Date()), box = $("ccList"); box.innerHTML = "";
-  const up = cases.filter(c => c.status !== "skip" && (!c.deadline || c.deadline >= today)).sort((a, b) => (a.deadline || "9999").localeCompare(b.deadline || "9999"));
-  const past = cases.filter(c => c.status === "skip" || (c.deadline && c.deadline < today)).sort((a, b) => (b.deadline || "").localeCompare(a.deadline || ""));
+  const isClosed = c => c.status === "skip" || c.closed || (c.deadline && c.deadline < today);
+  const isStale = c => !isClosed(c) && !c.deadline && Date.now() - ccReceived(c) > 45 * 864e5;   // no date found and the email is over 6 weeks old
+  const up = cases.filter(c => !isClosed(c) && !isStale(c)).sort((a, b) => (a.deadline || "9999").localeCompare(b.deadline || "9999") || ccReceived(b) - ccReceived(a));
+  const stale = cases.filter(isStale).sort((a, b) => ccReceived(b) - ccReceived(a));
+  const past = cases.filter(isClosed).sort((a, b) => (b.deadline || "").localeCompare(a.deadline || ""));
   if (!cases.length) { box.innerHTML = `<div class="panel muted">No case competitions yet. Press "Scan my email".</div>`; return; }
   const card = c => {
-    const d = document.createElement("div"); const isPast = c.deadline && c.deadline < today;
+    const d = document.createElement("div"); const isPast = isClosed(c);
     d.className = "cc" + (isPast || c.status === "skip" ? " past" : "");
     const days = c.deadline ? Math.round((new Date(c.deadline + "T00:00:00") - new Date(today + "T00:00:00")) / 864e5) : null;
     d.innerHTML = `<h3></h3><div class="due"></div><div class="meta"><span>🏢 <b class="org"></b></span><span>📅 Registration ends: <b class="end"></b></span><span>👥 Team: <b class="team"></b></span></div>
@@ -2491,8 +2494,10 @@ function renderCases() {
     d.querySelector(".team").textContent = c.team || "not mentioned";
     const due = d.querySelector(".due");
     if (days != null && !isPast) { due.textContent = days === 0 ? "Ends today" : `${days} day${days === 1 ? "" : "s"} left`; if (days <= 3) due.classList.add("soon"); }
-    else if (isPast) due.textContent = "Closed";
-    if (c.link) { const a = d.querySelector(".lnk"); a.href = c.link; a.hidden = false; }
+    else if (isPast) due.textContent = c.status === "skip" ? "Not interested" : "Closed";
+    else if (!c.deadline) { due.textContent = "Received " + new Date(ccReceived(c)).toLocaleDateString("en-IN", { day: "numeric", month: "short" }); due.style.fontWeight = "400"; due.style.color = "var(--muted)"; }
+    const goodLink = c.link && !BAD_LINK.test(c.link) ? c.link : cleanLinks(c.links)[0];
+    if (goodLink) { const a = d.querySelector(".lnk"); a.href = goodLink; a.hidden = false; }
     if (c.subject) d.querySelector(".src").textContent = (c.src === "email + website" ? "From email + website: " : "From email: ") + c.subject.slice(0, 60);
     // tap a detail to correct it yourself
     [["org", "organiser", "Organiser"], ["end", "deadline", "Registration end date (YYYY-MM-DD)"], ["team", "team", "Team size (e.g. 2-4)"]].forEach(([cls, field, label]) => {
@@ -2502,10 +2507,10 @@ function renderCases() {
     if (ccMissing(c)) {
       const f = d.querySelector(".find"); f.hidden = false;
       f.onclick = async () => {
-        if (!geminiKey) return alert("Save your Gemini key in the Ask AI tab first.");
-        f.disabled = true; f.textContent = "🔎 Checking the website…";
-        const ok = await enrichCase(c);
-        f.disabled = false; f.textContent = ok ? "✓ Updated" : "Couldn't find more details";
+        f.disabled = true; f.textContent = "🔎 Searching the web…";
+        const n = await lookupOnline([c], t => $("ccMsg").textContent = t);
+        f.disabled = false; f.textContent = n ? "✓ Updated" : "Couldn't find more details";
+        $("ccMsg").textContent = n ? `Updated "${c.name}".` : `No more details found online for "${c.name}". Tap a detail to fill it in yourself.`;
       };
     }
     const sel = d.querySelector("select"); sel.value = c.status || "new";
@@ -2513,7 +2518,12 @@ function renderCases() {
     d.querySelector(".del").onclick = () => confirm(`Delete "${c.name}"?`) && deleteDoc(doc(fs, "users", uid, "caseComps", c.id));
     return d;
   };
+  if (!up.length) box.innerHTML = `<div class="panel muted">No open competitions right now.</div>`;
   up.forEach(c => box.appendChild(card(c)));
+  if (stale.length) {
+    const det = document.createElement("details"); det.innerHTML = `<summary class="muted" style="margin:6px 0 10px">Probably closed: no deadline found and the email is over 6 weeks old (${stale.length})</summary>`;
+    stale.forEach(c => det.appendChild(card(c))); box.appendChild(det);
+  }
   if (past.length) {
     const det = document.createElement("details"); det.innerHTML = `<summary class="muted" style="margin:6px 0 10px">Closed or not interested (${past.length})</summary>`;
     past.forEach(c => det.appendChild(card(c))); box.appendChild(det);
@@ -2525,115 +2535,157 @@ $("ccForm").onsubmit = e => {
   $("ccForm").reset();
 };
 
-/* Fill missing details (deadline, team size, organiser, name) from the competition's web page.
-   1) Gemini opens the links found in the email.  2) If that fails, Gemini searches Google. */
-const ccMissing = c => !c.deadline || !c.team || !c.organiser;
-async function enrichCase(c) {
-  const today = dstr(new Date());
-  const ask = `Find the details of this case competition. Use ONLY what the pages actually say.
-Competition: "${c.name}"${c.organiser ? ` by ${c.organiser}` : ""}.
-Already known: deadline=${c.deadline || c.deadlineText || "unknown"}, team size=${c.team || "unknown"}.
-Today is ${today}. Return ONLY a JSON object: {"name": "official competition name", "organiser": "organising company or college", "registration_deadline": "YYYY-MM-DD or null", "deadline_text": "deadline as written, or null", "team_size": "e.g. '2-4', or null", "link": "best registration page URL, or null", "found": true/false}`;
-  const tryOnce = async (prompt, tools) => {
-    try { const out = await gemini([{ role: "user", parts: [{ text: prompt }] }], false, "", { tools }); return parseJSON(out); } catch (e) { return null; }
-  };
-  let r = null;
-  const links = (c.links && c.links.length ? c.links : [c.link]).filter(Boolean);
-  if (links.length) r = await tryOnce(ask + "\n\nRead these pages:\n" + links.join("\n"), [{ url_context: {} }]);
-  if (!r || !r.found || (!r.registration_deadline && !r.team_size)) {
-    const r2 = await tryOnce(ask + "\n\nSearch the web (e.g. Unstop, the organiser's site) for this competition's registration page.", [{ google_search: {} }]);
-    if (r2 && r2.found) r = { ...(r || {}), ...Object.fromEntries(Object.entries(r2).filter(([, v]) => v)) };
+/* ---------- helpers ---------- */
+const BAD_LINK = /(webex|zoom\.us|teams\.microsoft|meet\.google|calendar\.google|unsubscribe|optout|linkedin\.com|instagram\.com|facebook\.com|twitter\.com|x\.com\/|youtube\.com|youtu\.be|whatsapp|mailto:|google\.com\/maps|\.(png|jpe?g|gif)(\?|$))/i;
+const cleanLinks = arr => [...new Set((arr || []).filter(u => /^https?:\/\//.test(u || "") && !BAD_LINK.test(u)))];
+const ccMissing = c => !c.closed && (!c.deadline || !c.team || !c.organiser);
+const ccReceived = c => { const t = Date.parse(c.receivedAt || ""); return isNaN(t) ? (c.createdAt || Date.now()) : t; };
+
+/* ---------- look up missing details online (GitHub robot browser) ---------- */
+async function lookupOnline(list, say) {
+  list = list.filter(c => c.id).slice(0, 15);
+  if (!list.length) return 0;
+  if (!ghToken) { say("To look up missing details online, add your GitHub token first (Dot Notes → + Summarise an article)."); return 0; }
+  const req = "c" + Date.now();
+  const payload = list.map(c => ({ id: c.id, name: c.name, organiser: c.organiser || "", links: cleanLinks(c.links && c.links.length ? c.links : [c.link]).slice(0, 3) }));
+  const r = await gh("POST", "/actions/workflows/case-details.yml/dispatches", { ref: "main", inputs: { request_id: req, cases: JSON.stringify(payload) } });
+  if (r.status !== 204) { say(r.status === 404 ? "The 'case-details' workflow isn't on GitHub yet (see setup steps)." : "GitHub refused (error " + r.status + ")."); return 0; }
+  const started = Date.now();
+  while (Date.now() - started < 12 * 60e3) {
+    await new Promise(z => setTimeout(z, 10000));
+    say(`Searching the web for ${list.length} competition${list.length === 1 ? "" : "s"}… (${Math.round((Date.now() - started) / 1000)}s, usually 1–4 minutes)`);
+    const f = await gh("GET", `/contents/casecomps/pending/${req}.json?ref=main&t=${Date.now()}`);
+    if (!f.ok) continue;
+    const meta = await f.json(), data = JSON.parse(b64decode(meta.content));
+    let n = 0;
+    for (const res of data.results || []) {
+      const c = cases.find(x => x.id === res.id) || list.find(x => x.id === res.id); if (!c || res.error) continue;
+      const upd = {};
+      if (/^\d{4}-\d{2}-\d{2}$/.test(res.registration_deadline || "") && res.registration_deadline !== c.deadline) upd.deadline = res.registration_deadline;
+      if (!c.deadlineText && res.deadline_text) upd.deadlineText = res.deadline_text;
+      if (!c.team && res.team_size) upd.team = String(res.team_size);
+      if (!c.organiser && res.organiser) upd.organiser = res.organiser;
+      if (res.link && (!c.link || BAD_LINK.test(c.link))) upd.link = res.link;
+      if (res.status === "closed") upd.closed = true;
+      if (Object.keys(upd).length) { upd.src = "email + website"; await updateDoc(doc(fs, "users", uid, "caseComps", c.id), upd); n++; }
+    }
+    await gh("DELETE", `/contents/casecomps/pending/${req}.json`, { message: "Clear case lookup", sha: meta.sha }).catch(() => {});
+    return n;
   }
-  if (!r || !r.found) return false;
-  const upd = {};
-  if (!c.deadline && /^\d{4}-\d{2}-\d{2}$/.test(r.registration_deadline || "")) upd.deadline = r.registration_deadline;
-  if (!c.deadlineText && r.deadline_text) upd.deadlineText = r.deadline_text;
-  if (!c.team && r.team_size) upd.team = String(r.team_size);
-  if (!c.organiser && r.organiser) upd.organiser = r.organiser;
-  if (!c.link && r.link) upd.link = r.link;
-  if (Object.keys(upd).length) { upd.src = "email + website"; await updateDoc(doc(fs, "users", uid, "caseComps", c.id), upd); return true; }
-  return false;
+  say("The web lookup is taking too long. Check the Actions tab on GitHub."); return 0;
 }
 
 // Gmail is read with a separate, temporary sign-in, so your hub login is never changed.
 const mailApp = initializeApp(firebaseConfig, "mail");
 const mailAuth = getAuth(mailApp);
 setPersistence(mailAuth, inMemoryPersistence).catch(() => {});
-const CC_QUERY = 'newer_than:90d ("case competition" OR "case comp" OR "case challenge" OR "case study competition" OR "case championship" OR "case contest" OR "strategy challenge" OR "B-school competition" OR "bschool competition" OR "business case")';
+const CC_QUERY = 'newer_than:120d ("case competition" OR "case comp" OR "case challenge" OR "case study competition" OR "case championship" OR "case contest" OR "strategy challenge" OR "B-school competition" OR "bschool competition" OR "business case" OR unstop)';
 function b64urlText(s) { try { return new TextDecoder().decode(Uint8Array.from(atob(s.replace(/-/g, "+").replace(/_/g, "/")), c => c.charCodeAt(0))); } catch (e) { return ""; } }
 function mailBody(payload) {
   let plain = "", html = "";
   (function walk(p) {
     if (!p) return;
-    if (p.mimeType === "text/plain" && p.body?.data) plain += b64urlText(p.body.data);
-    else if (p.mimeType === "text/html" && p.body?.data) html += b64urlText(p.body.data);
+    if (p.mimeType === "text/plain" && p.body?.data && !p.filename) plain += b64urlText(p.body.data);
+    else if (p.mimeType === "text/html" && p.body?.data && !p.filename) html += b64urlText(p.body.data);
     (p.parts || []).forEach(walk);
   })(payload);
-  let t = plain || html.replace(/<style[\s\S]*?<\/style>/gi, " ").replace(/<br\s*\/?>|<\/p>|<\/div>|<\/li>/gi, "\n").replace(/<a [^>]*href="([^"]+)"[^>]*>/gi, " [$1] ").replace(/<[^>]+>/g, " ");
+  // prefer HTML when it has links, so real registration links aren't lost
+  let t = html ? html.replace(/<style[\s\S]*?<\/style>/gi, " ").replace(/<br\s*\/?>|<\/p>|<\/div>|<\/li>|<\/tr>/gi, "\n").replace(/<a [^>]*href="([^"]+)"[^>]*>/gi, " [$1] ").replace(/<[^>]+>/g, " ") : plain;
   const ta = document.createElement("textarea"); ta.innerHTML = t; t = ta.value;
   return t.replace(/[ \t]+/g, " ").replace(/\n\s*\n+/g, "\n").trim();
 }
-$("ccScan").onclick = async () => {
+function mailAttachments(payload) {
+  const out = [];
+  (function walk(p) {
+    if (!p) return;
+    if (p.filename && p.body?.attachmentId && /^(application\/pdf|image\/(png|jpe?g|webp))$/i.test(p.mimeType) && (p.body.size || 0) < 4e6) out.push({ id: p.body.attachmentId, mime: p.mimeType.toLowerCase().replace("image/jpg", "image/jpeg"), name: p.filename });
+    (p.parts || []).forEach(walk);
+  })(payload);
+  return out.slice(0, 2);
+}
+const CC_ASK = `decide if it announces or invites participation in a case competition or a similar student business competition (case challenge, strategy/marketing/finance case contest, B-school competition). Newsletters, results announcements, webinars and job posts are NOT case competitions.
+Return for it: {"i": index, "is_case_comp": true/false, "name": "official competition name", "organiser": "company or college organising it", "registration_deadline": "YYYY-MM-DD or null", "deadline_text": "the deadline as written, or null", "team_size": "e.g. '2-4' or '3', or null", "status": "open / closed / unknown", "link": "the registration or competition page URL (Unstop, D2C, Google Form, company or college page), or null", "links": ["up to 3 URLs that lead to the competition's page"]}.
+Never use meeting links (Webex, Zoom, Teams, Meet), social media or unsubscribe links as the link. Check attached brochures and posters too.
+Use ONLY information in the email and its attachments. If the year is missing, assume the next occurrence after the email date.`;
+async function runScan(all) {
   if (!geminiKey) { $("ccMsg").textContent = "Save your Gemini key in the Ask AI tab first."; return; }
   const msg = t => $("ccMsg").textContent = t;
-  $("ccScan").disabled = true;
+  $("ccScan").disabled = $("ccRescan").disabled = true;
   let token = null, account = "";
   try {
     msg("Choose the email account that receives case competitions…");
     const p = new GoogleAuthProvider(); p.addScope("https://www.googleapis.com/auth/gmail.readonly"); p.setCustomParameters({ prompt: "select_account" });
     const res = await signInWithPopup(mailAuth, p);
     token = GoogleAuthProvider.credentialFromResult(res)?.accessToken; account = res.user?.email || "";
-    const g = async path => { const r = await fetch("https://gmail.googleapis.com/gmail/v1/users/me/" + path, { headers: { Authorization: "Bearer " + token } }); if (!r.ok) throw new Error(r.status === 403 ? "Gmail refused access. Turn on the Gmail API (see setup steps), or your college may block this." : "Gmail error " + r.status); return r.json(); };
+    const g = async path => { const r = await fetch("https://gmail.googleapis.com/gmail/v1/users/me/" + path, { headers: { Authorization: "Bearer " + token } }); if (!r.ok) throw new Error(r.status === 403 ? "Gmail refused access. Your college may block this." : "Gmail error " + r.status); return r.json(); };
     msg("Searching your inbox…");
-    const list = await g("messages?maxResults=60&q=" + encodeURIComponent(CC_QUERY));
-    const seen = new Set(ccMeta.seen || []);
-    const fresh = (list.messages || []).map(m => m.id).filter(id => !seen.has(id)).slice(0, 40);
+    const list = await g("messages?maxResults=80&q=" + encodeURIComponent(CC_QUERY));
+    const seen = all ? new Set() : new Set(ccMeta.seen || []);
+    const fresh = (list.messages || []).map(m => m.id).filter(id => !seen.has(id)).slice(0, 50);
     if (!fresh.length) { msg("No new case-competition emails since the last scan."); await setDoc(ccMetaDoc(), { last: Date.now(), account }, { merge: true }); return; }
     const mails = [];
     for (const [i, id] of fresh.entries()) {
       msg(`Reading ${i + 1} of ${fresh.length} matching emails…`);
       const m = await g(`messages/${id}?format=full`);
       const hd = n => (m.payload.headers || []).find(x => x.name.toLowerCase() === n)?.value || "";
-      mails.push({ id, subject: hd("subject"), from: hd("from"), date: hd("date"), body: mailBody(m.payload).slice(0, 2500) });
+      const atts = [];
+      for (const a of mailAttachments(m.payload)) {
+        try { const d = await g(`messages/${id}/attachments/${a.id}`); atts.push({ mime: a.mime, data: d.data.replace(/-/g, "+").replace(/_/g, "/") }); } catch (e) {}
+      }
+      mails.push({ id, subject: hd("subject"), from: hd("from"), date: hd("date"), body: mailBody(m.payload).slice(0, 7000), atts });
     }
-    let added = 0; const toEnrich = [];
-    for (let i = 0; i < mails.length; i += 6) {
-      const batch = mails.slice(i, i + 6);
-      msg(`Picking out the details (${Math.min(i + 6, mails.length)} of ${mails.length})…`);
-      const prompt = `Below are ${batch.length} emails received by an MBA student in India. For EACH email, decide if it announces or invites participation in a case competition or a similar student business competition (case challenge, strategy/marketing/finance case contest, B-school competition). Newsletters, results announcements, webinars and job posts are NOT case competitions.
-For each email return an object: {"i": index, "is_case_comp": true/false, "name": "competition name", "organiser": "company or college organising it", "registration_deadline": "YYYY-MM-DD or null", "deadline_text": "the deadline as written, or null", "team_size": "e.g. '2-4' or '3', or null", "link": "the main registration or details link, or null", "links": ["up to 3 URLs in the email that most likely lead to the competition's page, e.g. Unstop, D2C, college or company pages"]}.
-Use ONLY information in the email. If the year is missing, assume the next occurrence after the email date. Return ONLY a JSON array.
-
-` + batch.map((m, k) => `=== EMAIL ${k} ===\nDate: ${m.date}\nFrom: ${m.from}\nSubject: ${m.subject}\n\n${m.body}`).join("\n\n");
+    // emails with brochures/posters go one by one (so the AI can look at them); the rest in small batches
+    const groups = [...mails.filter(m => m.atts.length).map(m => [m])];
+    const plainOnes = mails.filter(m => !m.atts.length);
+    for (let i = 0; i < plainOnes.length; i += 5) groups.push(plainOnes.slice(i, i + 5));
+    let added = 0, done = 0; const toEnrich = [];
+    for (const batch of groups) {
+      done += batch.length;
+      msg(`Picking out the details (${done} of ${mails.length} emails)…`);
+      const parts = [{ text: `Below ${batch.length === 1 ? "is 1 email" : `are ${batch.length} emails`} received by an MBA student in India. For EACH email, ${CC_ASK}\nReturn ONLY a JSON array.\n\n` + batch.map((m, k) => `=== EMAIL ${k} ===\nDate: ${m.date}\nFrom: ${m.from}\nSubject: ${m.subject}${m.atts.length ? `\n(${m.atts.length} attachment(s) included below)` : ""}\n\n${m.body}`).join("\n\n") }];
+      batch.forEach(m => m.atts.forEach(a => parts.push({ inline_data: { mime_type: a.mime, data: a.data } })));
       let out = [];
-      try { out = parseJSON(await gemini([{ role: "user", parts: [{ text: prompt }] }], true)); } catch (e) { msg("The AI is busy; some emails were skipped. Scan again later to retry them."); continue; }
-      for (const r of (Array.isArray(out) ? out : [])) {
-        const m = batch[r.i]; if (!m) continue;
+      try { out = parseJSON(await gemini([{ role: "user", parts }], true)); } catch (e) { msg("The AI is busy; some emails were skipped. Scan again later to retry them."); continue; }
+      for (const r of (Array.isArray(out) ? out : [out])) {
+        const m = batch[r.i ?? 0]; if (!m) continue;
         seen.add(m.id);
         if (!r.is_case_comp || !r.name) continue;
+        const links = cleanLinks([r.link, ...(r.links || [])]).slice(0, 3);
         const key = (r.name + "|" + (r.organiser || "")).toLowerCase().replace(/\s+/g, " ");
         const dup = cases.find(c => (c.name + "|" + (c.organiser || "")).toLowerCase().replace(/\s+/g, " ") === key);
-        const links = [...new Set([r.link, ...(r.links || [])].filter(u => /^https?:\/\//.test(u || "")))].slice(0, 3);
-        const data = { name: r.name, organiser: r.organiser || "", deadline: /^\d{4}-\d{2}-\d{2}$/.test(r.registration_deadline || "") ? r.registration_deadline : "", deadlineText: r.deadline_text || "", team: r.team_size || "", link: r.link || links[0] || "", links, subject: m.subject, msgId: m.id, receivedAt: m.date, src: "email" };
-        if (dup) { const upd = {}; for (const [k, v] of Object.entries(data)) if (v && (!dup[k] || (Array.isArray(v) && !dup[k].length))) upd[k] = v; if (data.deadline && data.deadline !== dup.deadline) upd.deadline = data.deadline; if (Object.keys(upd).length) await updateDoc(doc(fs, "users", uid, "caseComps", dup.id), upd); toEnrich.push({ ...dup, ...upd }); }
-        else { const ref = await addDoc(ccCol(), { ...data, status: "new", createdAt: Date.now() }); added++; toEnrich.push({ id: ref.id, ...data }); }
+        const data = { name: r.name, organiser: r.organiser || "", deadline: /^\d{4}-\d{2}-\d{2}$/.test(r.registration_deadline || "") ? r.registration_deadline : "", deadlineText: r.deadline_text || "", team: r.team_size || "", link: links[0] || "", links, subject: m.subject, msgId: m.id, receivedAt: m.date, src: "email", ...(r.status === "closed" ? { closed: true } : {}) };
+        if (dup) {
+          const upd = {};
+          for (const [k, v] of Object.entries(data)) if (v && (!dup[k] || (Array.isArray(v) && !(dup[k] || []).length))) upd[k] = v;
+          if (data.deadline && data.deadline !== dup.deadline) upd.deadline = data.deadline;
+          if (dup.link && BAD_LINK.test(dup.link)) upd.link = data.link || "";
+          if (Object.keys(upd).length) await updateDoc(doc(fs, "users", uid, "caseComps", dup.id), upd);
+          toEnrich.push({ ...dup, ...upd });
+        } else { const ref = await addDoc(ccCol(), { ...data, status: "new", createdAt: Date.now() }); added++; toEnrich.push({ id: ref.id, ...data }); }
       }
     }
     await setDoc(ccMetaDoc(), { seen: [...seen].slice(-800), last: Date.now(), account }, { merge: true });
-    // fill in anything the email didn't say, from the competition's own web page
+    token = null; signOut(mailAuth).catch(() => {});          // email access ends here
+    const found = added ? `Found ${added} new case competition${added === 1 ? "" : "s"}.` : "No new case competitions.";
     const gaps = toEnrich.filter(ccMissing);
-    let filled = 0;
-    for (const [k, c] of gaps.entries()) {
-      msg(`Checking the competition websites for missing details (${k + 1} of ${gaps.length})…`);
-      if (await enrichCase(c)) filled++;
-    }
-    msg((added ? `Found ${added} new case competition${added === 1 ? "" : "s"}.` : "Scan finished. No new case competitions.") + (gaps.length ? ` Filled missing details for ${filled} of ${gaps.length} from their websites.` : ""));
+    if (gaps.length) { msg(found + " Now looking up missing details online…"); const n = await lookupOnline(gaps, msg); msg(found + ` Filled in details for ${n} of ${gaps.length} from their websites.`); }
+    else msg(found);
   } catch (e) {
     msg(e.code === "auth/popup-closed-by-user" ? "Sign-in window was closed." : (e.message || "Couldn't scan your email."));
   } finally {
-    token = null; signOut(mailAuth).catch(() => {});        // drop the email access straight away
-    $("ccScan").disabled = false;
+    token = null; signOut(mailAuth).catch(() => {});
+    $("ccScan").disabled = $("ccRescan").disabled = false;
   }
+}
+$("ccScan").onclick = () => runScan(false);
+$("ccRescan").onclick = () => confirm("Re-read all matching emails from the last 4 months, including attachments? Existing entries are updated, not duplicated.") && runScan(true);
+$("ccFindAll").onclick = async () => {
+  const gaps = cases.filter(c => c.status !== "skip" && ccMissing(c));
+  if (!gaps.length) { $("ccMsg").textContent = "Nothing is missing."; return; }
+  $("ccFindAll").disabled = true;
+  const n = await lookupOnline(gaps, t => $("ccMsg").textContent = t);
+  $("ccMsg").textContent = `Filled in details for ${n} of ${Math.min(gaps.length, 15)} competitions.`;
+  $("ccFindAll").disabled = false;
 };
 
 /* ================= Gemini + Ask AI ================= */
@@ -2683,6 +2735,7 @@ async function geminiNow(contents, json, system, opts) {
         continue;
       }
       const err = await r.text();
+      if (r.status === 429 && opts.tools) { lastErr = "busy"; continue; }   // only the tool's own quota is used up
       if (r.status === 429) {
         const perDay = /PerDay|per day/i.test(err);
         const wait = +(err.match(/retry in ([\d.]+)s/) || [])[1] || 60;

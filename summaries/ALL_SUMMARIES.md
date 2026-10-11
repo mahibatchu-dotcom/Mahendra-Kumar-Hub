@@ -1,3 +1,36 @@
+# Honouring odd discoveries with Ig Nobel prizes!
+*2026-10-11* · [Original article](https://www.dot.news/post/6aca6add991dd40002527bba)
+
+**In one line:** The Ig Nobel Prizes celebrate unusual and quirky scientific research that makes people laugh first and think second.
+
+**Key points:**
+- Created in 1991 as a satire of the Nobel Prize, the Ig Nobels honor unusual and imaginative scientific studies grounded in real science.
+- Studies highlighted include cockroach milk nutrition, nose-blowing aerodynamics, urinal splashback reduction, and unethical behavior among upper classes.
+- Winners receive 10 trillion Zimbabwean dollars in prize money, an amount worth almost nothing due to hyperinflation.
+- Real Nobel laureates present the awards, and an eight-year-old girl stops long speeches by telling speakers she is bored.
+- The ceremony was held in Zurich, Switzerland, marking the first time it took place outside the United States.
+
+**Numbers and names to remember:**
+- 1991: the year the Ig Nobel Prizes began.
+- 10 trillion dollars: the amount of prize money awarded in Zimbabwean currency.
+- 30 degrees: the impact angle at urinals found to minimise splashback.
+- Diploptera punctata: a cockroach species that produces nutritious milk for its live young.
+- Atal Bihari Vajpayee: former Indian Prime Minister previously named on the Ig Nobel list.
+- Zurich, Switzerland: location of this year's ceremony, held outside the US for the first time.
+- Massachusetts Institute of Technology: regular host location for the awards ceremony.
+- The Stinker: the mascot of the awards, parodying Rodin's Thinker statue.
+
+**Why it matters:**
+The Ig Nobel Prizes show that science does not always have to be serious to be meaningful. They encourage curiosity by bringing attention to unusual scientific studies that entertain while providing genuine insight.
+
+**Key terms:**
+- Ig Nobel Prize: an annual satirical award honoring scientific research that makes people laugh first and then think.
+- Diploptera punctata: a species of cockroach that gives birth to live young and produces milk.
+- Pneumotachometer: an instrument that measures the flow of air.
+- The Stinker: the Ig Nobel mascot, based on Rodin's Thinker statue.
+
+---
+
 # Closing The Loop: Delhi is set to witness protests. Again.
 *2026-10-10* · [Original article](https://www.dot.news/post/6ac90ed7a2f59e0002cc3f6d)
 

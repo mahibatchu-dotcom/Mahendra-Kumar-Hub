@@ -1,3 +1,37 @@
+# Starstruck and Stuck
+*2026-10-12* · [Original article](https://www.dot.news/post/6acb5fa08538540002c33b8c)
+
+**In one line:** Elon Musk has accused the Indian government of intentionally delaying Starlink's licensing to protect local telecom monopolies, sparking a debate over spectrum allocation and satellite internet in India.
+
+**Key points:**
+- Elon Musk publicly claimed that Starlink is being blocked from receiving an Indian operating license to protect domestic business interests, specifically referencing Reliance chairman Mukesh Ambani.
+- The Indian government denied allegations of favoritism, while local telecom giants like Jio and Airtel argue that satellite spectrum should be auctioned rather than administratively allocated.
+- Starlink is licensed in over 165 countries and has spent five years working to comply with Indian regulatory requirements.
+- Unlike traditional geostationary satellites stationed 35,785 km above Earth, Starlink uses thousands of Low Earth Orbit (LEO) satellites at roughly 500 km to deliver internet with minimal latency.
+- Regulatory body TRAI does not view satellite internet as direct competition to fiber or 4G yet due to higher costs, latency trade-offs, and lower capacity.
+
+**Numbers and names to remember:**
+- **Elon Musk:** Owner of X and founder of satellite internet venture Starlink.
+- **Mukesh Ambani:** Head of Reliance (Jio), implicated by Musk regarding market protection.
+- **Starlink and Amazon's Project Kuiper:** Satellite internet providers utilizing Low Earth Orbit networks.
+- **Airtel, Jio, Vi:** Major Indian terrestrial telecom operators.
+- **TRAI:** Telecom Regulatory Authority of India.
+- **35,785 km:** Altitude of geostationary satellites.
+- **~500 km:** Altitude of Low Earth Orbit (LEO) satellites.
+- **~11,000:** Current target number of LEO satellites in Starlink's network.
+- **₹30,000 and ₹8,000:** Approximate international costs for Starlink hardware and monthly service fees, respectively.
+
+**Why it matters:**
+This conflict highlights the friction between global satellite internet ventures and established domestic telecom providers competing for market access and regulatory advantages in India. Securing satellite internet access could transform connectivity for remote and hard-to-reach areas across the country.
+
+**Key terms:**
+- **Geostationary Orbit (GEO):** High-altitude orbit where satellites stay in a fixed position relative to Earth, causing noticeable signal lag.
+- **Low Earth Orbit (LEO):** Low-altitude orbit (~500 km) enabling fast, low-lag satellite communication, but requiring a constellation of thousands of satellites.
+- **Spectrum:** Radio frequencies used to transmit wireless signals, including mobile data, Wi-Fi, and satellite communication.
+- **Latency:** The delay in time between sending a request for data and receiving it.
+
+---
+
 # Honouring odd discoveries with Ig Nobel prizes!
 *2026-10-11* · [Original article](https://www.dot.news/post/6aca6add991dd40002527bba)
 

@@ -1,3 +1,33 @@
+# Stokes of Genius
+*2026-10-15* · [Original article](https://www.dot.news/post/6acf8e6d35930800028da990)
+
+**In one line:** OpenAI has claimed that its AI system produced a proof for the Navier-Stokes problem, a century-old mathematical challenge carrying a million-dollar prize.
+
+**Key points:**
+- OpenAI announced its AI system solved the Navier-Stokes problem, sparking both excitement and concern among mathematicians.
+- Established in 1845, the Navier-Stokes equations describe how fluids like liquids and gases flow based on pressure, viscosity, and external forces.
+- In May 2000, the Clay Mathematics Institute named Navier-Stokes one of seven Millennium Prize Problems, offering $1 million to solve each one.
+- Before this claim, only one Millennium Prize problem—the Poincaré Conjecture, solved by Grigori Perelman—had been resolved.
+- To solve the problem, mathematicians must prove either "global smoothness" (equations stay smooth and predictable forever) or "blowup" (equations break down at a singularity).
+
+**Numbers and names to remember:**
+- **OpenAI:** The artificial intelligence company claiming to have solved the problem.
+- **Clay Mathematics Institute (CMI):** The organization that established the Millennium Prize Problems in May 2000.
+- **$1 million:** The prize money offered for solving each Millennium Prize Problem.
+- **1845:** The year the Navier-Stokes equations were introduced.
+- **Grigori Perelman:** The Russian mathematician who solved the Poincaré Conjecture and declined both the $1 million prize and the Fields Medal.
+- **G.H. Hardy:** British mathematician who wrote *A Mathematician's Apology*.
+
+**Why it matters:** The Navier-Stokes equations underpin real-world applications from aircraft design to medical blood-flow simulations, and solving them with AI marks a major milestone that could reshape the future of mathematics.
+
+**Key terms:**
+- **Navier-Stokes equations:** Mathematical formulas that describe the movement of fluids, including liquids and gases.
+- **Viscosity:** The internal friction within a fluid that resists flow.
+- **Global smoothness:** A condition where the equations yield smooth, predictable fluid motion indefinitely without breaking down.
+- **Blowup:** A failure where mathematical equations collapse and create a singularity, failing to describe physical reality.
+
+---
+
 # Red Label: FSSAI’s front-of-pack labels satisfy neither health groups nor the food industry
 *2026-10-14* · [Original article](https://www.dot.news/post/6acd105c42feba00025e904a)
 

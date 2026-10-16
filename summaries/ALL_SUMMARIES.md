@@ -1,3 +1,33 @@
+# A Far Drift
+*2026-10-16* · [Original article](https://www.dot.news/post/6ad0e63337260e000293b821)
+
+**In one line:** The far-right party Alternative for Germany (AfD) made history by winning 44% of the vote in state elections in Saxony-Anhalt, drawing attention to long-standing political and economic divides rooted in post-WWII German history.
+
+**Key points:**
+- The AfD won the largest share of votes (44%) in Germany's Saxony-Anhalt state election despite mainstream political parties distancing themselves from it.
+- Germany’s intelligence agency had previously classified the AfD briefly as an "extremist organisation."
+- After WWII ended in 1945, Germany and Berlin were split into four occupation zones, eventually becoming capitalist West Germany (FRG) and communist East Germany (GDR) in 1949.
+- Economic stagnation in the East led to the construction of the Berlin Wall in 1961, which stood until citizens tore it down in November 1989.
+- Following reunification in 1990, high costs, elevated unemployment, and an unpopular unification tax created ongoing economic struggles across the country.
+
+**Numbers and names to remember:**
+- **44%:** The share of the vote won by the AfD in Saxony-Anhalt.
+- **1945, 1949, 1961, 1989, 1990:** Key historical dates spanning the end of WWII, division into FRG/GDR, building/falling of the Berlin Wall, and national reunification.
+- **2005 to 2021:** The years Angela Merkel served four consecutive terms as chancellor.
+- **People:** Adolf Hitler, Winston Churchill, Joseph Stalin, Ronald Reagan, Mikhail Gorbachev, Angela Merkel.
+- **Places & Organisations:** Saxony-Anhalt, West Germany (FRG), East Germany (GDR), Berlin, Alternative für Deutschland (AfD), Christian Democratic Union (CDU), Social Democratic Party (SPD).
+
+**Why it matters:**
+- The AfD's electoral success signals a significant rise in public support for fringe, far-right politics in Germany. It demonstrates how lingering post-reunification economic and social challenges continue to reshape European politics.
+
+**Key terms:**
+- **Alternative für Deutschland (AfD):** A far-right political party in Germany.
+- **Bizonia:** The combined US and British occupation zones established in 1947.
+- **Berlin Airlift:** A Western Allied mission that flew supplies into West Berlin to overcome a Soviet blockade in 1948–1949.
+- **Wirtschaftswunder:** The rapid post-WWII "economic miracle" that restored West Germany's economy.
+
+---
+
 # Stokes of Genius
 *2026-10-15* · [Original article](https://www.dot.news/post/6acf8e6d35930800028da990)
 

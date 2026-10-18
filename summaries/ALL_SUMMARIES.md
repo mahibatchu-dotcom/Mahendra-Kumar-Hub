@@ -1,3 +1,34 @@
+# How Not to Make an Argument
+*2026-10-18* · [Original article](https://www.dot.news/post/6ad360c8e9263e00021590db)
+
+**In one line:** The article explains how to identify common logical fallacies in everyday life and political debates using real history and a hypothetical government mandate.
+
+**Key points:**
+- Logical fallacies are flaws in reasoning that have been studied and recorded for thousands of years.
+- Ad Hominem fallacies attack a person's character instead of addressing their main argument.
+- Poisoning the Well involves attacking an opponent's credibility before they have a chance to speak.
+- The Straw Man fallacy creates an exaggerated or distorted version of an argument to make it easy to attack.
+- Circular Reasoning repeats a conclusion as evidence, Red Herring introduces a distraction, and Slippery Slope predicts extreme consequences without proof.
+
+**Numbers and names to remember:**
+- 2,000 years ago: approximate time when the Nyaya-Sutras was written.
+- Akṣapāda Gautama: ancient author attributed with writing the Nyaya-Sutras, which identified 5 logical flaws.
+- Aristotle: Greek philosopher who identified 13 fallacies in his work *Sophistical Refutations*.
+
+**Why it matters:**
+- Arguments are a normal part of daily life. Learning to recognize logical fallacies helps people spot flawed arguments made by others and improve their own reasoning.
+
+**Key terms:**
+- Logical fallacy: an error or flaw in reasoning.
+- Ad Hominem: attacking the person making an argument rather than the argument itself.
+- Poisoning the Well: damaging someone's credibility before they present their view.
+- Straw Man: misrepresenting an opponent's argument to make it easier to defeat.
+- Circular Reasoning: trying to prove a statement by repeating it in different words.
+- Red Herring: a misleading distraction used to shift focus away from the main issue.
+- Slippery Slope: assuming one initial action will trigger a chain of extreme consequences without evidence.
+
+---
+
 # Closing The Loop: Jantar Mantar and Connaught Place
 *2026-10-17* · [Original article](https://www.dot.news/post/6ad24fc9bd32350002845d7a)
 

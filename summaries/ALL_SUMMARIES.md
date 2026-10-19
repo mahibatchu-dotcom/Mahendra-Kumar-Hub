@@ -1,3 +1,37 @@
+# A Loaded Debate
+*2026-10-19* · [Original article](https://www.dot.news/post/6ad48aa2077e3f0002f9ee0c)
+
+**In one line:** The United States continues to struggle with high rates of gun violence rooted in its history and constitutional protection of firearm ownership.
+
+**Key points:**
+- A recent shooting at an Oregon primary school left four people dead—one teacher and three children—before a bystander killed the 16-year-old shooter.
+- The US has suffered 370 mass shootings this year, meaning there have been more incidents than days passed.
+- Historical reliance on armed citizen militias during the American Revolutionary War shaped the nation's view on firearm ownership.
+- Added to the US Constitution in 1791, the Second Amendment grants citizens the right to own weapons to protect against government tyranny.
+- The US has about 120 civilian guns for every 100 residents, and more than 120 people die from gun violence every day.
+
+**Numbers and names to remember:**
+- 4 victims (1 teacher and 3 children aged 5, 8, and 11)
+- 16-year-old suspected shooter
+- 370 mass shootings this year
+- Over 50 school shootings in 2026
+- 120 guns per 100 residents
+- 1775 (American Revolutionary War began)
+- 1776 (Declaration of Independence)
+- 1791 (Second Amendment added to the US Constitution)
+- Oregon, United States, Britain
+
+**Why it matters:**
+Gun violence remains a major public safety crisis in the United States, yet gun rights are deeply protected by history and constitutional law. Understanding these roots explains why making changes to US gun laws remains so difficult and divided.
+
+**Key terms:**
+- Second Amendment: A 1791 US constitutional law protecting citizens' right to keep and bear arms.
+- Mass shooting: An incident where four or more people are shot.
+- Salutary Neglect: An early British policy letting American colonies run their own affairs with minimal interference.
+- Militia: A military group made up of ordinary citizens instead of professional soldiers.
+
+---
+
 # How Not to Make an Argument
 *2026-10-18* · [Original article](https://www.dot.news/post/6ad360c8e9263e00021590db)
 

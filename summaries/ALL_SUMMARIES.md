@@ -1,3 +1,32 @@
+# A Giant Leap for Car-kind
+*2026-10-20* · [Original article](https://www.dot.news/post/6ad6113810709d00026ab089)
+
+**In one line:** Tesla has unveiled a new version of its Roadster that uses rocket-inspired technology and gas thrusters to perform mid-air stunts and achieve record-breaking acceleration.
+
+**Key points:**
+- Tesla CEO Elon Musk demonstrated the new Roadster, claiming it uses SpaceX technology to act as the world's first flying car.
+- In a live demonstration, the vehicle accelerated from 0 to 60 mph in 0.8 seconds, far outpacing current supercars and Formula 1 racers.
+- The car drove up a vertical ramp, flipped, jumped over a row of Tesla cars, and performed a mid-air barrel roll before landing on its wheels.
+- An underbody fan and ground-sealing vacuum system generates up to 2g of downforce, allowing the car to adhere to steep surfaces and turn tightly at high speeds.
+- Aerial flips, rolls, and jumps are driven by a cold-gas propulsion system using 10 perimeter nozzles controlled by precise actuators.
+
+**Numbers and names to remember:**
+- **Elon Musk:** CEO of Tesla and SpaceX.
+- **0.8 seconds:** Time taken for the new Roadster to go from 0 to 60 mph.
+- **230 mph (370 kph):** Stated initial top speed, with Musk targeting Mach 0.5 (approx. 370 mph / 600 kph).
+- **10:** Number of gas nozzles mounted around the vehicle for propulsion and maneuvering.
+- **Rimac Nevera R and McMurtry Spéirling:** Reference high-performance vehicles mentioned for speed and fan-suction tech.
+
+**Why it matters:**
+The vehicle demonstrates an unprecedented crossover between aerospace engineering and automotive design, pushing the boundaries of vehicle acceleration, aerodynamics, and stunt capabilities.
+
+**Key terms:**
+- **Cold-gas propulsion:** A thruster system that releases compressed gas through nozzles to push an object without burning fuel.
+- **Mach 0.5:** Half the speed of sound, equal to roughly 370 mph or nearly 600 kph.
+- **2g of force:** A level of force equal to twice the weight of the vehicle.
+
+---
+
 # A Loaded Debate
 *2026-10-19* · [Original article](https://www.dot.news/post/6ad48aa2077e3f0002f9ee0c)
 

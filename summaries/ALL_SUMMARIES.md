@@ -1,3 +1,29 @@
+# Jio Dhan Dhana Dhan
+*2026-10-22* · [Original article](https://www.dot.news/post/6ad8c96f7bdc04000205c52a)
+
+**In one line:** Jio Platforms is launching India's largest-ever IPO to raise ₹30,000 crore after transforming the nation's digital economy with low-cost internet.
+
+**Key points:**
+- Jio Platforms is holding a record ₹30,000 crore IPO, which was fully subscribed within 100 minutes of opening.
+- Launched in 2016, Jio grew into India's largest mobile operator with over 50 crore subscribers.
+- Cheap data introduced by Jio reduced data costs from ₹228 per GB in 2016 to ₹8 in 2026, driving monthly usage to over 25 GB per user.
+- Jio Platforms is the holding company for Reliance Jio Infocomm and is roughly two-thirds owned by Reliance Industries.
+- Prepaid mobile internet recharges generate 77% of Jio Platforms' total revenue.
+
+**Numbers and names to remember:**
+- Figures: ₹30,000 crore (IPO target), ₹28,000 crore (Hyundai Motor India 2024 IPO), 100 minutes (time to full subscription), 50 crore (subscriber count), ₹228 to ₹8 (price drop per GB), 25 GB (monthly usage per user), 77% (revenue share from prepaid mobile recharges), $20 billion (raised from outside investors in 2020).
+- Dates: 2012, 2016, 2020, 2024, 2026.
+- Organisations & People: Jio Platforms, Reliance Industries (RIL), Reliance Jio Infocomm (RJIL), Airtel, Vodafone Idea, BSNL, Meta, Google, Silver Lake, Saudi Arabia's Public Investment Fund (PIF), Mr Ambani.
+
+**Why it matters:**
+The IPO is the largest in Indian history, showcasing the vast financial scale of Reliance's tech arm. Jio's price disruption drastically expanded internet access across India, fueling the growth of streaming, food delivery, and digital payments.
+
+**Key terms:**
+- IPO (Initial Public Offering): When a private company sells shares to the general public on a stock exchange for the first time.
+- ARPU (Average Revenue Per User): A metric showing the average amount of money a company earns from each subscriber per month.
+
+---
+
 # A Giant Leap for Car-kind
 *2026-10-20* · [Original article](https://www.dot.news/post/6ad6113810709d00026ab089)
 

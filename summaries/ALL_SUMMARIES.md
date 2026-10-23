@@ -1,3 +1,33 @@
+# The French Are at It Again
+*2026-10-23* · [Original article](https://www.dot.news/post/6ada436d15f62d000266f0fe)
+
+**In one line:** Over 5 lakh people took to the streets across France in massive protests that led to violent clashes, property destruction, and thousands of arrests.
+
+**Key points:**
+- More than 5 lakh demonstrators took part in protests across France, with many being high school students, parents, teachers, and student unions.
+- While most marched peacefully, some rioters set buildings on fire—including a 143-year-old town hall—looted shops, and attacked police.
+- Authorities placed curfews, barred protests near Parliament and the presidential palace, and used tear gas to break up crowds.
+- Police faced criticism for excessive force after a 15-year-old lost his hand to a stun grenade.
+- Over 6,000 people were arrested, mostly minors who were later released without charge.
+- The unrest is part of a long French history of street demonstrations used to hold leaders accountable, dating back to the 1789 Revolution.
+
+**Numbers and names to remember:**
+- Over 5 lakh: Number of protesters who took to the streets.
+- 6,000+: Number of protesters arrested, most of whom were minors.
+- 15-year-old: Demonstrator who lost a hand to a police stun grenade.
+- 143-year-old: Historic town hall set on fire during the unrest.
+- January 2026: Date when over 350 farmers drove tractors to Parliament to protest an EU trade deal.
+- Emmanuel Macron: President of France.
+
+**Why it matters:** The demonstrations show how deeply street protests are embedded in French political life as a tool to question power when people feel their government is unresponsive.
+
+**Key terms:**
+- Three Estates: The social classes in pre-revolutionary France made up of church clergy, nobility, and commoners.
+- Stun grenade: An explosive police device meant to disorient crowds, which severely injured a protester.
+- "Yellow Vest" protests: A major 2018 French protest movement that began over fuel tax increases.
+
+---
+
 # Jio Dhan Dhana Dhan
 *2026-10-22* · [Original article](https://www.dot.news/post/6ad8c96f7bdc04000205c52a)
 

@@ -1,3 +1,32 @@
+# Closing The Loop
+*2026-10-24* · [Original article](https://www.dot.news/post/6adb567d76b9ee00027983f4)
+
+**In one line:** This weekly business roundup details Apple's Australian court defeat against Epic Games over app store monopolies and examines Nike's ongoing financial decline and loss of market share.
+
+**Key points:**
+- An Australian court found Apple guilty of violating competition law in a lawsuit filed by Epic Games, ordering Apple to reinstate Fortnite, permit alternative app stores, allow sideloading, and offer alternative payment options.
+- Apple currently forces developers to use its in-app purchase system, taking a 30% or 15% commission cut and banning developers from mentioning alternative payment methods.
+- Nike's stock dropped to a 12-year low, leading to its removal from the S&P 100 index, though it remains in the S&P 500.
+- On June 28, 2024, Nike experienced its worst single-day market performance in history, losing 21% of its market value, or about $28 billion.
+- Under new CEO Elliott Hill, Nike's annual profit fell by 3.5% amid rising tariffs, inflation, shifts in Chinese consumer preferences toward local brands like Anta Sports, and an earlier pivot toward direct-to-consumer sales.
+
+**Numbers and names to remember:**
+- **Figures & Dates:** 30% (and 15%) commission fee; ₹9,000 developer fee; 2020 (Fortnite ban year); 12-year stock low; June 28, 2024 ($28 billion / 21% value loss); 3.5% annual profit drop; 2017 (DTC shift).
+- **People:** Tim Sweeney (Epic Games CEO), Elliott Hill (Nike CEO).
+- **Organisations & Brands:** Apple, Epic Games, Nike, S&P 100, S&P 500, Adidas, Anta Sports, Spotify.
+- **Places:** Australia, US, China.
+
+**Why it matters:**
+The ruling against Apple weakens tech giants' control over mobile app distribution and payment processing, potentially giving developers and consumers more choices globally. Meanwhile, Nike's ongoing downturn demonstrates the operational risks of cutting ties with traditional retail partners and failing to keep up with local competition in critical international markets.
+
+**Key terms:**
+- **Rent-seeking:** Increasing wealth by controlling access to a resource rather than creating new products or value.
+- **In-app purchase (IAP) system:** A built-in transaction mechanism used to sell digital goods or subscriptions inside an app.
+- **Sideloading:** Installing apps directly onto a device without downloading them through an official app store.
+- **Direct-to-consumer (DTC):** A business strategy where companies sell products directly to buyers rather than through third-party retailers and wholesalers.
+
+---
+
 # The French Are at It Again
 *2026-10-23* · [Original article](https://www.dot.news/post/6ada436d15f62d000266f0fe)
 

@@ -1,3 +1,39 @@
+# How To Make A Sound Argument
+*2026-10-25* · [Original article](https://www.dot.news/post/6adcc2a96e87960002c2920e)
+
+**In one line:** This article provides a guide on how to build and evaluate logical arguments using premises, conclusions, and forms of reasoning like deduction, induction, and abduction.
+
+**Key points:**
+- Arguments are built from statements, where supporting statements are called premises and the supported claim is the conclusion.
+- An argument is considered valid when its conclusion logically follows from its premises.
+- An argument is considered sound if it is logically valid and all of its individual premises are true.
+- Deductive reasoning moves from general rules to specific conclusions with total logical certainty.
+- Inductive reasoning uses past observations to predict future outcomes based on probabilities.
+- Abductive reasoning finds the most reasonable explanation by eliminating improbable alternatives.
+
+**Numbers and names to remember:**
+- 70%: percentage of drivers claimed to look at smartphones at red lights.
+- Three-to-five-second delay: time lost as distracted drivers refocus when a light turns green.
+- N.O.I.S.E. Bill: National Obligation for Incessant Sonic Emissions Bill, a fictional government mandate used as an example.
+- 9 PM: time of the fictional debate broadcast.
+- Silk Board junction / Bangalore: traffic location used in an example argument.
+- Sherlock Holmes: quoted regarding the elimination of impossible explanations.
+
+**Why it matters:**
+Breaking down arguments into their logical components helps people spot flawed reasoning and build stronger, valid arguments in everyday discussions.
+
+**Key terms:**
+- Statement: A sentence that can be evaluated as either true or false.
+- Premise: A statement provided as evidence to support a conclusion.
+- Conclusion: The primary claim supported by an argument's premises.
+- Valid: An argument structure where the conclusion logically follows from the premises.
+- Sound: A valid argument whose premises are all factually true.
+- Deduction: Top-down reasoning from general premises to a specific conclusion.
+- Induction: Bottom-up reasoning using past observations to predict future likelihoods.
+- Abduction: Reasoning that infers the most likely explanation by ruling out impossible options.
+
+---
+
 # Closing The Loop
 *2026-10-24* · [Original article](https://www.dot.news/post/6adb567d76b9ee00027983f4)
 

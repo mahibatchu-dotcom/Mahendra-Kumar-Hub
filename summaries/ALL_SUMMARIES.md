@@ -1,3 +1,35 @@
+# A Century in the Making: Can the RBI arrest the rupee’s slide against the dollar?
+*2026-11-02* · [Original article](https://www.dot.news/post/6ae73763e6fcc400026e8bdf)
+
+**In one line:** The Indian rupee is nearing 100 per US dollar due to foreign investment outflows and high dollar demand, leading the Reserve Bank of India to take measures to slow its fall.
+
+**Key points:**
+- The US dollar serves as the main bridge currency for global commerce and is used in over 50% of international trade.
+- Over the last year, the Indian rupee has dropped nearly 7%, moving from around ₹89 to ₹95 per US dollar and heading toward 100.
+- Foreign investors have sold more than $32 billion in Indian equities so far this year, nearly double last year's total sales.
+- India moved from a fixed exchange rate to a "managed float" system following the 1991 Balance of Payments crisis, when dollar reserves dropped to only a few weeks of imports.
+- Under the managed float system, market forces largely set the rupee's value, but the RBI sells dollars from its reserves during fast drops to avoid crashes.
+
+**Numbers and names to remember:**
+- **₹100 per dollar:** The threshold the Indian rupee is approaching.
+- **7% (₹89 to ₹95):** The amount the rupee has fallen against the US dollar over the past year.
+- **₹3 per dollar:** The exchange rate around the time of India's independence.
+- **$32 billion:** The value of Indian equities sold by foreign investors so far this year.
+- **1991:** The year of India's Balance of Payments crisis.
+- **Reserve Bank of India (RBI):** India's central bank managing the currency and foreign exchange reserves.
+
+**Why it matters:**
+The falling rupee makes imports, foreign loans, and overseas travel more expensive for Indian companies and individuals. It also forces the central bank to intervene to keep the currency from crashing during global economic uncertainty.
+
+**Key terms:**
+- **Bridge currency:** A common currency, like the US dollar, used by two countries to settle international trade when neither uses the other's money.
+- **Managed float:** A system where market supply and demand determine currency value, but the central bank steps in during sudden drops.
+- **Balance of Payments crisis:** A financial emergency where a country runs out of foreign currency reserves needed to pay for imports.
+- **FX reserves:** Foreign currency assets stored by a central bank to help control currency stability.
+- **Remittances:** Money sent back home to India by non-resident Indians working overseas.
+
+---
+
 # The Science Of Staying Up
 *2026-11-01* · [Original article](https://www.dot.news/post/6ae6130540409b000234ffb4)
 

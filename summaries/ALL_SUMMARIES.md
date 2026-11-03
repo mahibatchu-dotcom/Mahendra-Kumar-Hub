@@ -1,3 +1,33 @@
+# At Your Beck and Call
+*2026-11-03* · [Original article](https://www.dot.news/post/6ae7761a2586e000024c6850)
+
+**In one line:** Always-on, autonomous AI agents are evolving beyond basic chatbots by taking real-world actions and running continuously in the background to handle complex tasks.
+
+**Key points:**
+- Generative AI chatbots use Large Language Models (LLMs) to think and understand language, but agentic AI adds the ability to take direct actions.
+- AI agents can automate personal and business tasks, such as comparing ride apps, managing job applications, or negotiating raw material purchases with suppliers.
+- Highly autonomous agents can solve problems, use necessary software tools, and complete multi-step goals with minimal human input.
+- Always-on agents operate continuously on servers, continuing to work even if a user closes their laptop or loses internet connectivity.
+- Agents currently interact with websites by mimicking human browsing, but new protocols like Model Context Protocol (MCP) and NLWeb aim to let AI communicate directly with software systems.
+
+**Numbers and names to remember:**
+- **AI Tools and Companies:** Claude Duet (Anthropic), Muse (Meta), Grok Bot (xAI), Dots (OpenAI), Google Gemini.
+- **Services and Apps:** Uber, Ola, Rapido, IRCTC.
+- **Locations and Languages:** Bangalore, Delhi, Mumbai, Kannada language.
+- **Technologies:** LLM, MCP, NLWeb, HTTP.
+
+**Why it matters:** Always-on autonomous AI shifts digital assistants from passive screen-bound tools into active helpers capable of completing real-world tasks independently. This technology could fundamentally change how individuals and businesses manage daily workloads and digital workflows.
+
+**Key terms:**
+- **Large Language Model (LLM):** An AI system trained on vast text data to understand, generate, and predict human language.
+- **Agentic AI:** AI systems equipped with tools to take real-world actions rather than just generating text or answers.
+- **Autonomy:** An AI's ability to independently make decisions, fix errors, and complete tasks with little to no human oversight.
+- **Always-on Agents:** Autonomous AI systems that run continuously in the background on external servers without relying on an active user device.
+- **Model Context Protocol (MCP):** A standardized communication method that allows AI agents to talk directly to external websites and software applications.
+- **NLWeb:** A technical standard that organizes website information so AI agents can easily parse and process the data.
+
+---
+
 # A Century in the Making: Can the RBI arrest the rupee’s slide against the dollar?
 *2026-11-02* · [Original article](https://www.dot.news/post/6ae73763e6fcc400026e8bdf)
 

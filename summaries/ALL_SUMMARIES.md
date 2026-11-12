@@ -1,3 +1,37 @@
+# Signal and Silence
+*2026-11-12* · [Original article](https://www.dot.news/post/6ae9fd5cc56d6e00029105fc)
+
+**In one line:** India has blocked Bitchat, a decentralized offline messaging app created by Jack Dorsey, fueling a debate over privacy and government control.
+
+**Key points:**
+- Twitter co-founder Jack Dorsey developed Bitchat as a decentralized, peer-to-peer messaging app during a Fourth of July weekend experiment.
+- The app allows people to message each other using nicknames without needing the internet, mobile networks, phone numbers, or email registration.
+- Bitchat uses Bluetooth Low Energy (BLE) to build local mesh networks, allowing encrypted messages to hop across up to seven devices to reach a recipient.
+- For longer distances or out-of-range users, it utilizes a "spray and wait" courier technique and the Nostr open relay protocol.
+- The Indian government blocked Bitchat, drawing criticism and sparking debates around communication access, privacy, and security.
+
+**Numbers and names to remember:**
+- Jack Dorsey: Co-founder and former CEO of Twitter, founder of Square/Block, and developer of Bitchat.
+- Biz Stone: Twitter co-founder and early investor in the mesh messaging app Bridgefy.
+- Bitchat: A decentralized, peer-to-peer messaging application.
+- 10,000: The number of users who joined Bitchat's iOS beta on TestFlight within days.
+- 7: The maximum number of hops a message can travel across devices in Bitchat's mesh network.
+- 2019: The year of the Hong Kong protests where similar mesh app Bridgefy was widely used.
+- India: The country that blocked the Bitchat app.
+
+**Why it matters:**
+The ban on Bitchat in India underscores the growing conflict between state regulation and privacy-centric, decentralized technologies. It illustrates how tools designed to operate without centralized control or internet reliance face swift governmental resistance.
+
+**Key terms:**
+- Mesh network: A system where nearby devices connect directly to each other to pass along data without a central server.
+- Bluetooth Low Energy (BLE): A power-efficient version of Bluetooth used for short-range communication between devices.
+- Multi-hop communication: Relaying a message through multiple intermediate devices to extend its reach.
+- End-to-end encryption: A security method that scrambles messages so only the sender and intended receiver can read them.
+- Spray and wait: A technique where copies of an encrypted message are stored on moving devices until one comes close enough to hand it to the recipient.
+- Nostr: An open network protocol that allows independent servers, called relays, to exchange messages over long distances.
+
+---
+
 # A Very Dotty Diwali
 *2026-11-11* · [Original article](https://www.dot.news/post/6ae9b0f72574ce0002520a53)
 

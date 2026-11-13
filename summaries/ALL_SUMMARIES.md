@@ -1,3 +1,34 @@
+# Losing The Plot: What’s ailing Netflix?
+*2026-11-13* · [Original article](https://www.dot.news/post/6aea29c691f3b80002dcd288)
+
+**In one line:** Despite being profitable and having hundreds of millions of subscribers, Netflix faces challenges including massive layoffs, executive shake-ups, stock drops, and rising competition.
+
+**Key points:**
+- Netflix recently announced plans to lay off about 1,000 employees, replaced its chief content officer, and lost its head of film.
+- The company's stock price is heading for its worst year since 2022 and is currently among the ten worst performers in the Nasdaq 100 Index.
+- Founded by Reed Hastings and Marc Randolph, Netflix launched on April 14, 1998, as a DVD-by-mail service before launching streaming in 2007.
+- In 2013, Netflix released *House of Cards*, pioneering the model of releasing full seasons at once and popularising binge-watching.
+- Recent reports indicate Netflix is losing ground to platforms like YouTube and losing its strong grip on pop culture.
+
+**Numbers and names to remember:**
+- **1,000:** estimated number of employees being laid off by Netflix.
+- **April 14, 1998:** the date Netflix.com launched with over 900 DVD titles.
+- **2007:** the year Netflix introduced its streaming video service, Watch Now.
+- **$30 million:** the cost of Netflix's 2008 deal with cable TV network Starz.
+- **$100 million:** reported budget for the first two seasons of *House of Cards*.
+- **Reed Hastings and Marc Randolph:** co-founders of Netflix.
+- **Nasdaq 100 Index:** a stock market index where Netflix is currently one of the ten worst performers.
+
+**Why it matters:**
+Netflix revolutionized home entertainment through DVD rentals, streaming technology, and binge-worthy original shows. Its current struggles with layoffs, executive departures, and stock performance show how hard it is to maintain market dominance amid evolving viewing habits.
+
+**Key terms:**
+- **Cinematch:** Netflix’s personalized recommendation algorithm that suggested content based on user ratings.
+- **Binge-watching:** watching multiple episodes or an entire season of a television show in a single viewing session.
+- **Nasdaq 100 Index:** a stock market index tracking 100 of the largest non-financial companies listed on the Nasdaq exchange.
+
+---
+
 # Signal and Silence
 *2026-11-12* · [Original article](https://www.dot.news/post/6ae9fd5cc56d6e00029105fc)
 

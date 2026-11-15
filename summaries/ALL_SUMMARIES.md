@@ -1,3 +1,31 @@
+# Shaken and Stirred
+*2026-11-15* · [Original article](https://www.dot.news/post/6af8ffcbe89aae0002e6e643)
+
+**In one line:** Unconventional real-life spies used deception and bold decisions to secretly influence major events during World War II.
+
+**Key points:**
+- Major League Baseball player Moe Berg secretly filmed Japanese military sites in 1934 and was later tasked with evaluating German atomic bomb progress during World War II.
+- In 1944, Berg attended a lecture by German physicist Werner Heisenberg in Switzerland, armed with orders to shoot him if he revealed Germany was close to building a nuclear weapon.
+- Spanish citizen Juan Pujol García tricked Nazi intelligence by creating a completely fabricated network of fake agents while residing in Portugal.
+- After becoming a British double agent, García convinced Hitler that the D-Day landings at Normandy were a diversion, keeping German troops waiting at Pas de Calais.
+- In 1943, a corpse carrying fake top-secret military documents washed ashore in Spain, deceiving Germany into moving forces to defend Greece instead of Sicily.
+
+**Numbers and names to remember:**
+- **Moe Berg:** Major League Baseball player and polyglot who spied for the United States.
+- **Werner Heisenberg:** Nobel Prize-winning German physicist leading Germany's nuclear efforts.
+- **Juan Pujol García:** Double agent decorated with both Germany's Iron Cross and Britain's MBE.
+- **Major William Martin:** The fake identity used on a drowned soldier's body to misdirect German military strategy.
+- **1934, 1942, 1943, 1944:** Important years covering Berg's Japan trip, intelligence operations, and the D-Day deception.
+
+**Why it matters:** Real espionage relies far more on strategic deception, fake intelligence, and personal judgment than fictional movie gadgets. These covert operations protected Allied invasion plans and reshaped outcomes during World War II.
+
+**Key terms:**
+- **Espionage:** The practice of using spies to collect secret political or military information.
+- **Double agent:** A spy who pretends to work for one country while secretly serving another.
+- **Operation Overlord:** The massive 1944 Allied military invasion of Nazi-occupied France.
+
+---
+
 # Losing The Plot: What’s ailing Netflix?
 *2026-11-13* · [Original article](https://www.dot.news/post/6aea29c691f3b80002dcd288)
 

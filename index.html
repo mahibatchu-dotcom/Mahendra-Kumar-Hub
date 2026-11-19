@@ -90,7 +90,11 @@
   .dn-tools { display: flex; gap: 8px; padding: 16px; }
   .dn-tools input { flex: 1; }
   .dn-count { padding: 0 18px 8px; font-size: 0.8rem; color: var(--muted); }
-  ul.dn-list { list-style: none; margin: 0; padding: 0 10px 24px; overflow-y: auto; flex: 1; }
+  ul.dn-list { list-style: none; margin: 0; padding: 0 10px 24px; flex: 1; }
+  @media (min-width: 801px) {
+    ul.dn-list { overflow-y: hidden; scrollbar-gutter: stable; }
+    header.scrolled-away ~ main ul.dn-list { overflow-y: auto; }
+  }
   ul.dn-list button { width: 100%; text-align: left; font: inherit; color: inherit; background: none; border: 0; padding: 12px 10px; border-radius: 10px; cursor: pointer; display: block; }
   ul.dn-list button:hover { background: var(--panel); }
   ul.dn-list button[aria-current="true"] { background: var(--panel); box-shadow: inset 4px 0 0 var(--mark); }
@@ -365,7 +369,7 @@
     <button data-view="cases" aria-current="false">Case Comps</button>
     <button data-view="ai" aria-current="false">Ask AI</button>
   </nav>
-  <div class="who" id="who" hidden><button class="rename-btn" id="renameBtn" aria-label="Customize tabs">✎ Tabs</button><span id="whoName"></span><button id="signOut">Sign out</button></div>
+  <div class="who" id="who" hidden><button class="rename-btn" id="renameBtn">Customize tabs</button><span id="whoName"></span><button id="signOut">Sign out</button></div>
 </header>
 
 <div class="plan-banner" id="planBanner" hidden><span id="planText"></span><button class="primary" id="planBtn"></button></div>
@@ -606,6 +610,7 @@
           <button class="pill" id="calOpen" aria-label="Open calendar">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="vertical-align:-3px;margin-right:6px"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Calendar</button>
         </div>
+        <button class="primary" id="medPhotoOpen" type="button" style="margin-bottom:8px">Add from package photos</button>
         <ul class="meds" id="medList"></ul>
         <p class="muted" id="medActionStatus" role="status" hidden></p>
         <p class="muted" style="margin-bottom:0">Took something on an earlier day? Open the Calendar, tap that day and tick it.</p>
@@ -646,7 +651,6 @@
           <label>How often<select id="medFreq"><option value="daily">Every day</option><option value="weekly">Once a week</option></select></label>
           <button class="primary" type="submit">Add</button>
         </form>
-        <button class="pill" id="medPhotoOpen" style="margin-top:12px">Add from package photos</button>
         <p class="muted" id="medAddStatus" role="status" style="margin-bottom:0" hidden></p>
       </div>
     </div>
@@ -862,6 +866,12 @@ const fs = getFirestore(app);
 const $ = id => document.getElementById(id);
 
 /* ================= Navigation ================= */
+const pageHeader = document.querySelector("header.bar");
+// Let the page scroll past the header before the desktop list handles scrolling.
+new IntersectionObserver(([entry]) => {
+  pageHeader.classList.toggle("scrolled-away", entry.intersectionRatio < 0.01);
+}, { threshold: 0.01 }).observe(pageHeader);
+
 function show(view) {
   if (!tabButtons.has(view)) view = "dot";
   const changed = $("v-" + view).hidden;
@@ -2741,7 +2751,7 @@ function startRough(u) {
   session.draft = typeof draft?.text === "string" ? draft : { text: "" };
   $("roughNew").value = session.draft.text;
   $("roughAdd").disabled = !$("roughNew").value.trim();
-  if (session.draft.text) $("roughStatus").textContent = "Draft restored from this device.";
+  $("roughStatus").textContent = session.draft.text ? "Draft restored from this device." : "Drafts save on this device as you type.";
   try {
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
@@ -2893,7 +2903,7 @@ $("roughNew").oninput = () => {
   const text = $("roughNew").value;
   session.draft = { text };
   const saved = writeRoughBackup(session.draftKey, text ? session.draft : null);
-  $("roughStatus").textContent = text ? saved ? "Draft saved on this device." : "Draft recovery is unavailable. Save this note before closing." : "";
+  $("roughStatus").textContent = text ? saved ? "Draft saved on this device." : "Draft recovery is unavailable. Save this note before closing." : "Drafts save on this device as you type.";
   $("roughAdd").disabled = !text.trim();
 };
 $("roughAdd").onclick = async () => {
